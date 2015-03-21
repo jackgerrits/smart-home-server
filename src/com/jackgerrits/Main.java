@@ -8,7 +8,7 @@ public class Main {
         SensorController sc = new SensorController(utils.getSensors());
         Server server = new Server(sc);
 
-        System.out.println("\nPress enter to end...");
+        System.out.println("\nPress enter to end...\n");
 
         try {
             System.in.read();
@@ -16,5 +16,6 @@ public class Main {
             e.printStackTrace();
         }
         server.stop();
+        sc.stop();
     }
 }

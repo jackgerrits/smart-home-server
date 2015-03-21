@@ -55,7 +55,14 @@ public class SensorController {
             @Override
             public void inputChanged(InputChangeEvent ie) {
                 //handle logic for processing events here
-                //events.add(new Event());
+                if(ie.getIndex() == getSensor("magSwitch").getPort()){
+                    if(ie.getState()){
+                        addEvent(new Event("magSwitch", "switch closed"));
+                    } else {
+                        addEvent(new Event("magSwitch", "switch opened"));
+                    }
+
+                }
             }
         });
 
@@ -64,12 +71,10 @@ public class SensorController {
             @Override
             public void sensorChanged(SensorChangeEvent se) {
                 //handle logic for processing events here
-                //events.add(new Event());
                 if(se.getIndex() == getSensor("touch").getPort()){
-                    System.out.println("touch event fired!");
                     addEvent(new Event("touch", "Touch sensor touched!"));
-
                 }
+
             }
         });
     }
@@ -130,7 +135,7 @@ public class SensorController {
         if(events.isEmpty()){
             events.add(in);
         } else {
-            //System.out.println(Math.abs(events.getLast().getTime() - in.getTime()));
+            //only add event if it isnt within 2 seconds of last event from same sensor
             if((Math.abs(events.getLast().getTime() - in.getTime()) > 2000) && events.getLast().getName() == in.getName()){
                 events.add(in);
             }
@@ -139,5 +144,13 @@ public class SensorController {
 
     public Event getEvent(){
         return events.remove();
+    }
+
+    public void stop(){
+        try {
+            ik.close();
+        } catch (PhidgetException e) {
+            e.printStackTrace();
+        }
     }
 }

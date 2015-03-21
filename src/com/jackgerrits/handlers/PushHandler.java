@@ -44,13 +44,10 @@ public class PushHandler implements HttpHandler {
         obj.put("rawTime: ", current.getTime());
         obj.put("time: ", current.getFormattedTime());
         t.sendResponseHeaders(200, obj.toString().length());
-        System.out.println("1");
         OutputStream os = t.getResponseBody();
-        System.out.println("2");
         os.write(obj.toString().getBytes());
-        System.out.println("3");
         os.close();
-        System.out.println("responded");
+        System.out.println("responded to push");
     }
 
     public void stop(){
