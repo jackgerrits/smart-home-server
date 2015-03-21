@@ -1,0 +1,28 @@
+#Application/webserver server port
+server-port=7777
+
+#options for phidget
+phidget-ip=192.168.0.78
+phidget-port=5001
+
+#CONNECTED SENSORS
+#add a name to corresponding sensor port if sensor is connected.
+#otherwise leave blank - IMPORTANT
+
+analog0=main
+analog1=
+analog2=
+analog3=
+analog4=
+analog5=
+analog6=
+analog7=
+
+digital0=
+digital1=
+digital2=
+digital3=Hello
+digital4=
+digital5=
+digital6=
+digital7=
