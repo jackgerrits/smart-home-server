@@ -15,10 +15,10 @@ import java.net.URI;
 public class StaticHandler implements HttpHandler {
 
     public void handle(HttpExchange t) throws IOException {
-        System.out.println(t.getRequestURI().getPath());
+        System.out.println("Serving: " + t.getRequestURI().getPath());
         String root = System.getProperty("user.dir");
         URI uri = t.getRequestURI();
-        String filePath = uri.getPath();
+        String filePath =  "/www" + uri.getPath();
         if(filePath.endsWith("/")){
             filePath += "index.html";
         }

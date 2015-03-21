@@ -18,25 +18,30 @@ public class SensorController {
     ArrayList<Sensor> sensors;
     InterfaceKitPhidget ik;
     LinkedList<Event> events;
+    String ip;
+    int port;
 
     public SensorController(ArrayList<Sensor> sensors){
         this.sensors = sensors;
+        ip = utils.getPhidgetIp();
+        port = utils.getPhidgetPort();
+        events = new LinkedList<Event>();
+
         try {
             ik = new InterfaceKitPhidget();
         } catch (PhidgetException e) {
             e.printStackTrace();
         }
 
-        System.out.println("'" + utils.getPhidgetIp()+ "'");
-        System.out.println(utils.getPhidgetPort());
-
 
         try {
-            ik.openAny(utils.getPhidgetIp(),utils.getPhidgetPort());
+            ik.openAny(ip,port);
         } catch (PhidgetException e) {
             System.out.println(e.getDescription());
             System.exit(1);
         }
+
+        System.out.println("Attempting to connect to Phidget... [ "+ ip + ", "+ port + " ]");
         try {
             ik.waitForAttachment();
         } catch (PhidgetException e) {
@@ -44,7 +49,7 @@ public class SensorController {
             System.out.println("Phidget cannot be found at that ip/port");
             System.exit(1);
         }
-        System.out.println("connected");
+        System.out.println("Successfully connected to Phidget!");
 
         ik.addInputChangeListener(new InputChangeListener() {
             @Override
@@ -60,6 +65,11 @@ public class SensorController {
             public void sensorChanged(SensorChangeEvent se) {
                 //handle logic for processing events here
                 //events.add(new Event());
+                if(se.getIndex() == getSensor("touch").getPort()){
+                    System.out.println("touch event fired!");
+                    addEvent(new Event("touch", "Touch sensor touched!"));
+
+                }
             }
         });
     }
@@ -93,13 +103,14 @@ public class SensorController {
     public int getVal(String sensorName){
         Sensor sensor = getSensor(sensorName);
         if(sensor.getType() == Sensor.sensorType.DIGITAL){
-            int res = -1;
             try {
-                res = ik.getOutputState(sensor.getPort()) ? 1 : 0;
+                System.out.println( ik.getOutputState(sensor.getPort()));
+                System.out.println(sensor.getPort());
+                return ik.getInputState(sensor.getPort()) ? 1 : 0;
             } catch (PhidgetException e) {
                 e.printStackTrace();
             }
-            return res;
+
         } else {
             try {
                 return ik.getSensorValue(sensor.getPort());
@@ -112,6 +123,18 @@ public class SensorController {
 
     public boolean areEvents(){
         return !events.isEmpty();
+    }
+
+    public void addEvent(Event in){
+        //Many events are fired for one real life event, this helps reduce the stutter
+        if(events.isEmpty()){
+            events.add(in);
+        } else {
+            //System.out.println(Math.abs(events.getLast().getTime() - in.getTime()));
+            if((Math.abs(events.getLast().getTime() - in.getTime()) > 2000) && events.getLast().getName() == in.getName()){
+                events.add(in);
+            }
+        }
     }
 
     public Event getEvent(){

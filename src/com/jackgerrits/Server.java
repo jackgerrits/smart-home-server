@@ -15,6 +15,7 @@ public class Server {
     int port;
     SensorController sensorController;
     HttpServer server = null;
+    PushHandler ps;
 
     public Server(SensorController sensorController){
         this.port = utils.getServerPort();
@@ -25,14 +26,20 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
+        ps = new PushHandler(sensorController);
+        server.createContext("/push", ps);
         server.createContext("/data/sensors", new SensorHandler(sensorController));
-        server.createContext("/push", new PushHandler());
         server.createContext("/", new StaticHandler());
         server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
-        System.out.println("about to start server");
+        System.out.println("Starting server on port " + port + "...");
         server.start();
+        System.out.println("Server started successfully!");
+    }
+
+    public void stop(){
+        System.out.println("Server stopping...");
+        server.stop(0);
+        ps.stop();
     }
 
 
