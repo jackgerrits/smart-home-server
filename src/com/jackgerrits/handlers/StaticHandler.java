@@ -8,11 +8,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.nio.file.Files;
 
 /**
  * Created by Jack on 21/03/2015.
  */
 public class StaticHandler implements HttpHandler {
+
+    public StaticHandler(){
+    }
 
     public void handle(HttpExchange t) throws IOException {
         System.out.println("Serving: " + t.getRequestURI().getPath());
@@ -39,6 +43,7 @@ public class StaticHandler implements HttpHandler {
             os.close();
         } else {
             // Object exists and is a file: accept with response code 200.
+            t.getResponseHeaders().set("Content-Type", Files.probeContentType(file.toPath()));
             t.sendResponseHeaders(200, 0);
             OutputStream os = t.getResponseBody();
             FileInputStream fs = new FileInputStream(file);
