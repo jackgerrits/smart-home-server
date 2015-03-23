@@ -17,18 +17,25 @@ import java.util.concurrent.Executors;
 public class Server {
     int port;
     SensorController sensorController;
+    Options options;
     HttpServer server = null;
     PushHandler ps;
+    final String username;
+    final String password;
+    
 
     //runs webserver and application server
-    public Server(SensorController sensorController, int port){
-        this.port = port;
+    public Server(SensorController sensorController, Options options){
+        this.options = options;
         this.sensorController = sensorController;
+        port = options.getServerPort();
+        username = options.getUsername();
+        password = options.getPassword();
 
         BasicAuthenticator bAuth = new BasicAuthenticator("get") {
             @Override
             public boolean checkCredentials(String user, String pwd) {
-                return user.equals("admin") && pwd.equals("password");
+                return user.equals(username) && pwd.equals(password);
             }
         };
 
@@ -48,8 +55,12 @@ public class Server {
     }
 
     //just runs web server
-    public Server(int port){
-        this.port = port;
+    public Server(Options options){
+        this.options = options;
+        port = options.getServerPort();
+        username = options.getUsername();
+        password = options.getPassword();
+
         try {
             server = HttpServer.create(new InetSocketAddress(port), 0);
         } catch (IOException e) {
@@ -61,7 +72,7 @@ public class Server {
 
             @Override
             public boolean checkCredentials(String user, String pwd) {
-                return user.equals("admin") && pwd.equals("password");
+                return user.equals(username) && pwd.equals(password);
             }
         });
 

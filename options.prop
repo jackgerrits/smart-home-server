@@ -1,6 +1,9 @@
 #Application/webserver server port
 server-port=7777
 
+username=admin
+password=password
+
 #options for phidget
 phidget-ip=192.168.0.77
 phidget-port=5001
