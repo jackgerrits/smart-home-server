@@ -4,6 +4,7 @@ import com.phidgets.PhidgetException;
 import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
 
+import java.lang.System;
 import java.util.NoSuchElementException;
 
 /**
@@ -19,6 +20,7 @@ public class EventRule {
     String sensorName;
     int val;
     condition cond;
+//    condition previousState;
     SensorController sensorController;
 
     public EventRule(String name, String description, String sensorName, int val, SensorController sensorController, condition cond){
@@ -28,6 +30,12 @@ public class EventRule {
         this.val = val;
         this.cond = cond;
         this.sensorController = sensorController;
+//        previousState = condition.CHANGE;
+    }
+
+    public EventRule(EventRule r1, EventRule R2){
+        //EVENT ONLY FIRES WHEN THE STATE SWITCHES BETWEEN THE TWO EVENTS
+        //IS THIS POSSIBLE????????????
     }
 
     //digital
@@ -62,8 +70,16 @@ public class EventRule {
 
     //analog
     public boolean test(SensorChangeEvent se) throws PhidgetException{
-        Sensor eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG);
-        if(eventSensor.getName().equals(sensorName)){
+        Sensor eventSensor = null;
+        try {
+            eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG);
+        } catch (NoSuchElementException e){
+            return false;
+        }
+
+        int curVal = 0;
+
+        if(eventSensor != null && eventSensor.getName().equals(sensorName)){
             switch (cond){
                 case EQUAL:
                     if(sensorController.getVal(eventSensor) == val){
@@ -71,15 +87,29 @@ public class EventRule {
                     }
                     break;
                 case GT:
-                    if(sensorController.getVal(eventSensor) > val){
+//                    System.out.println("prev: " + previousState);
+//                    System.out.println("val: " + sensorController.getVal(eventSensor));
+                    //checks if the value is greater than the threshold and it isnt already in a greater than state
+                    curVal = sensorController.getVal(eventSensor);
+//                    if(curVal > val && previousState!=condition.GT){  // previous state is meant to stop continuous firing once it goes over threshold
+                    if(curVal > val){  // previous state is meant to stop continuous firing once it goes over threshold
+//                        previousState = condition.GT;
                         return true;
+                    } else {
+                        return false;
                     }
-                    break;
                 case LT:
-                    if(sensorController.getVal(eventSensor) < val){
+//                    System.out.println("prev: " + previousState);
+//                    System.out.println("val: " + sensorController.getVal(eventSensor));
+                    //checks if the value is less than the threshold and it isnt already in a less than state
+                    curVal = sensorController.getVal(eventSensor);
+//                    if(curVal < val && previousState!=condition.LT){ // previous state is meant to stop continuous firing once it goes under threshold
+                    if(curVal < val){ // previous state is meant to stop continuous firing once it goes under threshold
+//                        previousState = condition.LT;
                         return true;
+                    } else {
+                        return false;
                     }
-                    break;
                 case CHANGE:
                     return true;
             }

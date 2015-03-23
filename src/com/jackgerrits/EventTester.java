@@ -21,7 +21,9 @@ public class EventTester {
         rules = new ArrayList<>();
         rules.add(new EventRule("door", "Door open", "magSwitch", 0, sensorController, EventRule.condition.EQUAL));
         rules.add(new EventRule("door", "Door closed", "magSwitch", 1, sensorController, EventRule.condition.EQUAL));
-        rules.add(new EventRule("touch", "touch sensor touched", "touch", 0, sensorController, EventRule.condition.CHANGE));
+        rules.add(new EventRule("light", "Room is bright", "light", 30, sensorController, EventRule.condition.GT));
+        rules.add(new EventRule("light", "Room is dark", "light", 30, sensorController, EventRule.condition.LT));
+
     }
 
     public Event evalEvent(SensorChangeEvent se)  throws PhidgetException{
