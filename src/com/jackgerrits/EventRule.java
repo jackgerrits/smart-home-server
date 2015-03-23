@@ -4,6 +4,8 @@ import com.phidgets.PhidgetException;
 import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
 
+import java.util.NoSuchElementException;
+
 /**
  * Created by jackgerrits on 23/03/15.
  */
@@ -30,7 +32,18 @@ public class EventRule {
 
     //digital
     public boolean test(InputChangeEvent ie) throws PhidgetException {
-        Sensor eventSensor = sensorController.getSensor(ie.getIndex(), Sensor.sensorType.DIGITAL);
+        Sensor eventSensor = null;
+
+        try {
+            eventSensor = sensorController.getSensor(ie.getIndex(), Sensor.sensorType.DIGITAL);
+        } catch (NoSuchElementException e){
+            e.printStackTrace();
+            System.out.println("Port: " + ie.getIndex() + ", DIGITAL");
+            System.out.println("State: " + ie.getState());
+            System.out.println("--------------");
+            return false;
+        }
+
         if(eventSensor.getName().equals(sensorName)){
             switch (cond){
                 case EQUAL:

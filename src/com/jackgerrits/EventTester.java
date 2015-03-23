@@ -1,6 +1,5 @@
 package com.jackgerrits;
 
-import com.phidgets.Phidget;
 import com.phidgets.PhidgetException;
 import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
@@ -22,9 +21,7 @@ public class EventTester {
         rules = new ArrayList<>();
         rules.add(new EventRule("door", "Door open", "magSwitch", 0, sensorController, EventRule.condition.EQUAL));
         rules.add(new EventRule("door", "Door closed", "magSwitch", 1, sensorController, EventRule.condition.EQUAL));
-        rules.add(new EventRule("door", "Door changed state", "magSwitch", 0, sensorController, EventRule.condition.CHANGE));
-
-
+        rules.add(new EventRule("touch", "touch sensor touched", "touch", 0, sensorController, EventRule.condition.CHANGE));
     }
 
     public Event evalEvent(SensorChangeEvent se)  throws PhidgetException{
