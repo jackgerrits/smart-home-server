@@ -18,13 +18,15 @@ public class SensorController {
     ArrayList<Sensor> sensors;
     InterfaceKitPhidget ik;
     LinkedList<Event> events;
+    Options ops;
     String ip;
     int port;
 
-    public SensorController(ArrayList<Sensor> sensors){
-        this.sensors = sensors;
-        ip = utils.getPhidgetIp();
-        port = utils.getPhidgetPort();
+    public SensorController(String ip, int port, Options ops){
+        sensors = ops.getSensors();
+        this.ip = ip;
+        this.port = port;
+        this.ops = ops;
         events = new LinkedList<Event>();
 
         try {
@@ -136,7 +138,7 @@ public class SensorController {
             events.add(in);
         } else {
             //only add event if it isnt within 2 seconds of last event from same sensor
-            if((Math.abs(events.getLast().getTime() - in.getTime()) > 2000) && events.getLast().getName() == in.getName()){
+            if((Math.abs(events.getLast().getTime() - in.getTime()) > ops.getEventTimeout()) && events.getLast().getName() == in.getName()){
                 events.add(in);
             }
         }

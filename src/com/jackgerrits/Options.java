@@ -10,14 +10,18 @@ import java.util.Properties;
  * Created by Jack on 21/03/2015.
  */
 public class Options {
-    public static ArrayList<Sensor> getSensors() {
-        ArrayList<Sensor> sensors = new ArrayList<Sensor>();
-        Properties properties = new Properties();
+    String filename;
+    Properties properties;
+
+    public Options(String filename){
+        this.filename = filename;
+        properties = new Properties();
+
         FileInputStream in = null;
         try {
-            in = new FileInputStream("options.prop");
+            in = new FileInputStream(filename);
         } catch (FileNotFoundException e) {
-            System.out.println("options.prop not found");
+            System.out.println(filename + " not found");
             System.exit(1);
         }
 
@@ -27,6 +31,10 @@ public class Options {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<Sensor> getSensors() {
+        ArrayList<Sensor> sensors = new ArrayList<>();
 
         //get connected analog sensors
         for(int i =0; i < 8; i++){
@@ -35,6 +43,7 @@ public class Options {
             }
         }
 
+        //get digital sensors
         for(int i =0; i < 8; i++){
             if(!properties.getProperty("digital"+i).equals("")){
                 sensors.add(new Sensor(properties.getProperty("digital"+i), i, Sensor.sensorType.DIGITAL));
@@ -44,67 +53,51 @@ public class Options {
         return sensors;
     }
 
-    public static String getPhidgetIp(){
-        Properties properties = new Properties();
-        FileInputStream in = null;
-        try {
-            in = new FileInputStream("options.prop");
-        } catch (FileNotFoundException e) {
-            System.out.println("options.prop not found");
-            System.exit(1);
+    public String getPhidgetIp(){
+        if(properties.containsKey("phidget-ip") && !properties.getProperty("phidget-ip").equals("")){
+            return properties.getProperty("phidget-ip");
+        } else {
+            return "localhost";
         }
-
-        try {
-            properties.load(in);
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return properties.getProperty("phidget-ip");
     }
 
-    public static int getPhidgetPort(){
-
-        Properties properties = new Properties();
-        FileInputStream in = null;
-        try {
-            in = new FileInputStream("options.prop");
-        } catch (FileNotFoundException e) {
-            System.out.println("options.prop not found");
-            System.exit(1);
+    public int getPhidgetPort(){
+        if(properties.containsKey("phidget-port") && !properties.getProperty("phidget-port").equals("")){
+            return Integer.parseInt(properties.getProperty("phidget-port"));
+        } else {
+            return 5001;
         }
-
-        try {
-            properties.load(in);
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return Integer.parseInt(properties.getProperty("phidget-port"));
-
     }
 
-    public static int getServerPort(){
-        Properties properties = new Properties();
-        FileInputStream in = null;
-        try {
-            in = new FileInputStream("options.prop");
-        } catch (FileNotFoundException e) {
-            System.out.println("options.prop not found");
-            System.exit(1);
+    public int getServerPort(){
+        if(properties.containsKey("server-port") && !properties.getProperty("server-port").equals("")) {
+            return Integer.parseInt(properties.getProperty("server-port"));
+        } else {
+            return 8888;
         }
-
-        try {
-            properties.load(in);
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return Integer.parseInt(properties.getProperty("server-port"));
     }
 
+    public int getEventTimeout(){
+        if(properties.containsKey("event-timeout") && !properties.getProperty("event-timeout").equals("")) {
+            return Integer.parseInt(properties.getProperty("event-timeout"));
+        } else {
+            return 2000;
+        }
+    }
 
+    public String getUsername(){
+        if(properties.containsKey("username") && !properties.getProperty("username").equals("")){
+            return properties.getProperty("username");
+        } else {
+            return "admin";
+        }
+    }
+
+    public String getPassword(){
+        if(properties.containsKey("password") && !properties.getProperty("password").equals("")){
+            return properties.getProperty("password");
+        } else {
+            return "password";
+        }
+    }
 }

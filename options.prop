@@ -5,11 +5,12 @@ server-port=7777
 phidget-ip=192.168.0.77
 phidget-port=5001
 
+#event timeout in ms
+event-timeout=2000
+
 #CONNECTED SENSORS
 #add a name to corresponding sensor port if sensor is connected.
 #otherwise leave blank - IMPORTANT
-
-#sensors with events: magSwitch, touch
 
 analog0=dist
 analog1=

@@ -6,7 +6,6 @@ import com.jackgerrits.handlers.StaticHandler;
 import com.sun.net.httpserver.BasicAuthenticator;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.HttpsServer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -22,8 +21,8 @@ public class Server {
     PushHandler ps;
 
     //runs webserver and application server
-    public Server(SensorController sensorController){
-        this.port = utils.getServerPort();
+    public Server(SensorController sensorController, int port){
+        this.port = port;
         this.sensorController = sensorController;
 
         BasicAuthenticator bAuth = new BasicAuthenticator("get") {
@@ -49,8 +48,8 @@ public class Server {
     }
 
     //just runs web server
-    public Server(){
-        this.port = utils.getServerPort();
+    public Server(int port){
+        this.port = port;
         try {
             server = HttpServer.create(new InetSocketAddress(port), 0);
         } catch (IOException e) {
@@ -59,6 +58,7 @@ public class Server {
 
         HttpContext hc = server.createContext("/", new StaticHandler());
         hc.setAuthenticator(new BasicAuthenticator("get") {
+
             @Override
             public boolean checkCredentials(String user, String pwd) {
                 return user.equals("admin") && pwd.equals("password");
