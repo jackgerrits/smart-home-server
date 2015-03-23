@@ -9,7 +9,7 @@ import java.util.Properties;
 /**
  * Created by Jack on 21/03/2015.
  */
-public class utils {
+public class Options {
     public static ArrayList<Sensor> getSensors() {
         ArrayList<Sensor> sensors = new ArrayList<Sensor>();
         Properties properties = new Properties();
@@ -105,4 +105,6 @@ public class utils {
 
         return Integer.parseInt(properties.getProperty("server-port"));
     }
+
+
 }
