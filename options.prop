@@ -2,10 +2,10 @@
 server-port=7777
 
 username=admin
-password=password
+password=cheese
 
 #options for phidget
-phidget-ip=192.168.0.77
+phidget-ip=192.168.0.21
 phidget-port=5001
 
 #event timeout in ms
@@ -15,7 +15,7 @@ event-timeout=2000
 #add a name to corresponding sensor port if sensor is connected.
 #otherwise leave blank - IMPORTANT
 
-analog0=dist
+analog0=
 analog1=
 analog2=
 analog3=light
@@ -24,7 +24,7 @@ analog5=
 analog6=touch
 analog7=
 
-digital0=
+digital0=test
 digital1=
 digital2=
 digital3=

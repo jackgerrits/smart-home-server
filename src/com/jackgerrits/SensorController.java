@@ -21,6 +21,7 @@ public class SensorController {
     Options ops;
     String ip;
     int port;
+    EventTester eventTester;
 
     public SensorController(String ip, int port, Options ops){
         sensors = ops.getSensors();
@@ -28,6 +29,8 @@ public class SensorController {
         this.port = port;
         this.ops = ops;
         events = new LinkedList<Event>();
+        eventTester = new EventTester(this);
+        eventTester.loadEvents("TEST");
 
         try {
             ik = new InterfaceKitPhidget();
@@ -56,14 +59,14 @@ public class SensorController {
         ik.addInputChangeListener(new InputChangeListener() {
             @Override
             public void inputChanged(InputChangeEvent ie) {
-                //handle logic for processing events here
-                if(ie.getIndex() == getSensor("magSwitch").getPort()){
-                    if(ie.getState()){
-                        addEvent(new Event("magSwitch", "switch closed"));
-                    } else {
-                        addEvent(new Event("magSwitch", "switch opened"));
-                    }
-
+                Event current = null;
+                try {
+                    current = eventTester.evalEvent(ie);
+                } catch (PhidgetException e) {
+                    e.printStackTrace();
+                }
+                if(current != null){
+                    addEvent(current);
                 }
             }
         });
@@ -72,11 +75,15 @@ public class SensorController {
         {
             @Override
             public void sensorChanged(SensorChangeEvent se) {
-                //handle logic for processing events here
-                if(se.getIndex() == getSensor("touch").getPort()){
-                    addEvent(new Event("touch", "Touch sensor touched!"));
+                Event current = null;
+                try {
+                    current = eventTester.evalEvent(se);
+                } catch (PhidgetException e) {
+                    e.printStackTrace();
                 }
-
+                if(current != null){
+                    addEvent(current);
+                }
             }
         });
     }
@@ -107,25 +114,27 @@ public class SensorController {
         throw new NoSuchElementException();
     }
 
-    public int getVal(String sensorName){
+    public int getVal(String sensorName) throws PhidgetException {
         Sensor sensor = getSensor(sensorName);
         if(sensor.getType() == Sensor.sensorType.DIGITAL){
-            try {
-                System.out.println( ik.getOutputState(sensor.getPort()));
-                System.out.println(sensor.getPort());
-                return ik.getInputState(sensor.getPort()) ? 1 : 0;
-            } catch (PhidgetException e) {
-                e.printStackTrace();
-            }
+            System.out.println( ik.getOutputState(sensor.getPort()));
+            System.out.println(sensor.getPort());
+            return ik.getInputState(sensor.getPort()) ? 1 : 0;
 
         } else {
-            try {
-                return ik.getSensorValue(sensor.getPort());
-            } catch (PhidgetException e) {
-                e.printStackTrace();
-            }
+            return ik.getSensorValue(sensor.getPort());
         }
-        return -1;
+    }
+
+    public int getVal(Sensor sensor) throws PhidgetException {
+        if(sensor.getType() == Sensor.sensorType.DIGITAL){
+            System.out.println( ik.getOutputState(sensor.getPort()));
+            System.out.println(sensor.getPort());
+            return ik.getInputState(sensor.getPort()) ? 1 : 0;
+
+        } else {
+            return ik.getSensorValue(sensor.getPort());
+        }
     }
 
     public boolean areEvents(){

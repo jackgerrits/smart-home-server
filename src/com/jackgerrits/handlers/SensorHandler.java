@@ -2,6 +2,7 @@ package com.jackgerrits.handlers;
 
 import com.jackgerrits.Sensor;
 import com.jackgerrits.SensorController;
+import com.phidgets.PhidgetException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.simple.JSONArray;
@@ -21,20 +22,19 @@ import java.util.Arrays;
  */
 public class SensorHandler implements HttpHandler {
     SensorController sensorController;
+    String[] connectedSensors;
 
     public SensorHandler(SensorController sc){
         this.sensorController = sc;
+        connectedSensors = sensorController.getConnectedSensors();
+
     }
 
     @Override
     public void handle(HttpExchange t) throws IOException {
         URI uri = t.getRequestURI();
         String path = uri.getPath();
-        String[] connectedSensors = sensorController.getConnectedSensors();
-
         System.out.println(uri.getPath());
-
-
 
         if (path.equals("/data/sensors")){
             JSONObject obj = new JSONObject();
@@ -53,11 +53,35 @@ public class SensorHandler implements HttpHandler {
             String sensorName = path.substring(14);
             System.out.println(path.substring(14));
             JSONObject obj = new JSONObject();
-            obj.put("value: ", sensorController.getVal(sensorName));
-            obj.put("name: ", sensorName);
-            t.sendResponseHeaders(200, obj.toString().length());
+            int value = -1;
+            try{
+                value = sensorController.getVal(sensorName);
+            } catch (PhidgetException e){
+                System.out.println(e.getErrorNumber());
+                System.out.println(e.getDescription());
+                /* TODO determine cause of Phidget exception
+                    -determine if no sensor being plugged into analog port throws an error and what error code
+                        CANNOT TELL IF THERE IS NO SENSOR
+                        JUST RETURNS ZERO
+                    -handle error if connection to Phidget is lost (Network lost)
+
+                 */
+            }
+
             OutputStream os = t.getResponseBody();
-            os.write(obj.toString().getBytes());
+
+            if(value != -1){
+                obj.put("value", value);
+                obj.put("name", sensorName);
+                t.sendResponseHeaders(200, obj.toString().length());
+                os.write(obj.toString().getBytes());
+            } else {
+                String response = "<h1>500 - Server Error</h1> <br /> " +
+                        "Lost connection to Phidget.";
+                t.sendResponseHeaders(500, response.length());
+                os.write(response.getBytes());
+            }
+
             os.close();
         }
         else {
@@ -67,6 +91,5 @@ public class SensorHandler implements HttpHandler {
             os.write(response.getBytes());
             os.close();
         }
-
     }
 }
