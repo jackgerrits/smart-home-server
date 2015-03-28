@@ -16,6 +16,6 @@ Ensure that correct sensors are in the corresponding places in _options.prop_, s
 
 ###Web API
 * */* - Serves static pages in www directory
-* */push* - Long polling hook for server pushing events to client
+* */data/feed* - Long polling hook for server pushing events to client
 * */data/sensors* - Returns list of names of all connected sensors
 * */data/sensors/[sensorName]* - Returns current value of sensor
