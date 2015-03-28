@@ -1,4 +1,4 @@
-package com.jackgerrits;
+package com.jackgerrits.events;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

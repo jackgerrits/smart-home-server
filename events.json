@@ -2,32 +2,38 @@
   "COMMENT": "Due to event timeout to prevent too many events occuring, a change and greater/less than event wont fire together. Higher up events will fire first",
   "events": [
     {
-      "name": "lightOn",
-      "description": "The light has been turned on.",
-      "sensor": "light",
-      "cond": "gt",
-      "val": 30
-    },
-    {
+      "type": "change",
       "name": "door",
       "description": "Door opened/closed",
       "sensor": "magSwitch",
-      "cond": "change",
-      "val": 0
     },
     {
+      "type": "change",
+      "name": "sensorTouch",
+      "description": "Sensor touched.",
+      "sensor": "touch",
+    },
+    {
+      "type": "equal",
       "name": "doorClosed",
       "description": "Door closed",
       "sensor": "magSwitch",
-      "cond": "equals",
       "val": 1
     },
     {
+      "type": "threshold",
+      "name-lt": "lightOn",
+      "name-gt": "lightOff",
+      "description-lt": "The light has been turned on.",
+      "description-gt": "The light has been turned off.",
+      "sensor": "light",
+      "val": 30
+    },
+    {
+      "type": "and",
       "name": "alarm",
       "description": "Door closed and sensor touched",
-      "sensor": ["magSwitch", "touch"],
-      "cond": ["equals", "change"],
-      "val": [1, 0]
+      "events": ["doorClosed","sensorTouch"],
     }
   ]
 }

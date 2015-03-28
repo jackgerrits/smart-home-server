@@ -1,6 +1,6 @@
 package com.jackgerrits.handlers;
 
-import com.jackgerrits.Event;
+import com.jackgerrits.events.Event;
 import com.jackgerrits.SensorController;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;

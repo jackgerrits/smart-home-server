@@ -1,5 +1,6 @@
 package com.jackgerrits;
 
+import com.jackgerrits.events.Event;
 import com.phidgets.InterfaceKitPhidget;
 import com.phidgets.PhidgetException;
 import com.phidgets.event.InputChangeEvent;
