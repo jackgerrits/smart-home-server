@@ -5,6 +5,7 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) {
+
         Options ops = new Options("options.prop");
         SensorController sc = new SensorController(ops.getPhidgetIp(), ops.getPhidgetPort(), ops);
         Server server = new Server(sc, ops);

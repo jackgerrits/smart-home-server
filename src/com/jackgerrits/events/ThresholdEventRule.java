@@ -20,6 +20,7 @@ public class ThresholdEventRule extends EventRule {
     private String description_gt;
     private String sensorName;
     private int threshold;
+    private double runningAverage;
     private SensorController sensorController;
     private state currentState;
 
@@ -37,6 +38,7 @@ public class ThresholdEventRule extends EventRule {
         this.threshold = val;
         this.sensorController = sc;
         this.currentState = state.INIT;
+        runningAverage = 0;
     }
 
     //this rule does not make sense for a digital input, no point testing
@@ -57,14 +59,18 @@ public class ThresholdEventRule extends EventRule {
             return null;
         }
 
+
+
         if(eventSensor.getName().equals(sensorName)){
             int currentValue = sensorController.getVal(eventSensor);
-            if((currentValue > threshold) && (currentState != state.GT)){
+            //uses running average weighted more heavily on fast to reduce the impact of momentary spikes on output
+            runningAverage = runningAverage*0.6 + currentValue*0.4;
+            if((runningAverage > threshold) && (currentState != state.GT)){
                if(canFire() || override){
                     currentState = state.GT;
                     return new Event(name_gt,description_gt);
                 }
-            } else if ((currentValue < threshold) && (currentState != state.LT)){
+            } else if ((runningAverage < threshold) && (currentState != state.LT)){
                 if(canFire() || override){
                     currentState = state.LT;
                     return new Event(name_lt,description_lt);

@@ -18,6 +18,11 @@ public class AndEventRule extends EventRule {
     private SensorController sensorController;
 
 
+    /*
+     * AND event works for CHANGE and EQUAL events (Currently threshold events arent supported due to complexity)
+     * Two things cannot change at the same moment so therefoer
+     */
+
     public AndEventRule(String name, String description, EventRule r1, EventRule r2, SensorController sc, Options ops){
         super(ops);
         this.name = name;
