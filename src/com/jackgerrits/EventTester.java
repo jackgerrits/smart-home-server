@@ -11,47 +11,47 @@ import java.util.ArrayList;
  * Created by jackgerrits on 23/03/15.
  */
 public class EventTester {
-    ArrayList<EventRule> rules;
-    SensorController sensorController;
+    private ArrayList<EventRule> rules;
+    private SensorController sensorController;
+    Options ops;
 
-    public EventTester(SensorController sensorController){
+    public EventTester(SensorController sensorController, Options ops){
         this.sensorController = sensorController;
+        this.ops = ops;
     }
 
     public void loadEvents(String filename){
         rules = new ArrayList<>();
-//        rules.add(new EventRule("door", "Door open", "magSwitch", 0, sensorController));
-        rules.add(new EqualEventRule("doorOpened", "Door opened.", "magSwitch", 0, sensorController));
-        rules.add(new EqualEventRule("doorClosed", "Door closed.", "magSwitch", 1, sensorController));
-        rules.add(new ChangeEventRule("touch", "Touch sensor touched.", "touch", sensorController));
-        rules.add(new ThresholdEventRule("lightOff", "lightOn", "Room is dark.", "Room is bright.", "light", 30, sensorController));
-//        rules.add(new EventRule("door", "Door closed", "magSwitch", 1, sensorController, EventRule.condition.EQUAL));
-//        rules.add(new EventRule("touch", "Touch detected", "touch", 1, sensorController, EventRule.condition.CHANGE));
-//        rules.add(new EventRule("light", "Room is bright", "light", 30, sensorController, EventRule.condition.GT));
-//        rules.add(new EventRule("light", "Room is dark", "light", 30, sensorController, EventRule.condition.LT));
+        rules.add(new EqualEventRule("doorOpened", "Door opened.", "magSwitch", 0, sensorController,ops));
+        rules.add(new EqualEventRule("doorClosed", "Door closed.", "magSwitch", 1, sensorController, ops));
+        rules.add(new ChangeEventRule("touch", "Touch sensor touched.", "touch", sensorController, ops));
+        rules.add(new AndEventRule("alarm", "door open and sensor touched", rules.get(2), rules.get(0), sensorController, ops));
+        rules.add(new ThresholdEventRule("lightOff", "lightOn", "Room is dark.", "Room is bright.", "light", 30, sensorController, ops));
 
     }
 
-    public Event evalEvent(SensorChangeEvent se)  throws PhidgetException {
+    public ArrayList<Event> evalEvent(SensorChangeEvent se)  throws PhidgetException {
+        ArrayList<Event> outcomes = new ArrayList<>();
         if (rules != null){
             for(EventRule rule : rules) {
-                Event result = rule.test(se);
+                Event result = rule.test(se, false);
                 if(result != null){
-                    return result;
+                    outcomes.add(result);
                 }
             }
         }
-        return null;
+        return outcomes;
     }
-    public Event evalEvent(InputChangeEvent ie) throws PhidgetException {
+    public ArrayList<Event> evalEvent(InputChangeEvent ie) throws PhidgetException {
+        ArrayList<Event> outcomes = new ArrayList<>();
         if (rules != null){
-            for(EventRule rule : rules){
-                Event result = rule.test(ie);
+            for(EventRule rule : rules) {
+                Event result = rule.test(ie, false);
                 if(result != null){
-                    return result;
+                    outcomes.add(result);
                 }
             }
         }
-        return null;
+        return outcomes;
     }
 }

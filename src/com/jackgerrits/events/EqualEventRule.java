@@ -1,5 +1,6 @@
 package com.jackgerrits.events;
 
+import com.jackgerrits.Options;
 import com.jackgerrits.Sensor;
 import com.jackgerrits.SensorController;
 import com.phidgets.PhidgetException;
@@ -11,15 +12,16 @@ import java.util.NoSuchElementException;
 /**
  * Created by Jack on 28/03/2015.
  */
-public class EqualEventRule implements EventRule {
+public class EqualEventRule extends EventRule {
 
-    String name;
-    String description;
-    String sensorName;
-    int val;
-    SensorController sensorController;
+    private String name;
+    private String description;
+    private String sensorName;
+    private int val;
+    private SensorController sensorController;
 
-    public EqualEventRule(String name, String description, String sensorName, int val, SensorController sensorController){
+    public EqualEventRule(String name, String description, String sensorName, int val, SensorController sensorController, Options ops){
+        super(ops);
         this.name = name;
         this.description = description;
         this.sensorName = sensorName;
@@ -28,7 +30,7 @@ public class EqualEventRule implements EventRule {
     }
 
     @Override
-    public Event test(InputChangeEvent ie) throws PhidgetException {
+    public Event test(InputChangeEvent ie, boolean override) throws PhidgetException {
         Sensor eventSensor;
         try {
             eventSensor = sensorController.getSensor(ie.getIndex(), Sensor.sensorType.DIGITAL);
@@ -42,14 +44,16 @@ public class EqualEventRule implements EventRule {
 
         if(eventSensor.getName().equals(sensorName)){
             if(sensorController.getVal(eventSensor) == val){
-                return new Event(name, description);
+                if(canFire() || override){
+                    return new Event(name, description);
+                }
             }
         }
         return null;
     }
 
     @Override
-    public Event test(SensorChangeEvent se) throws PhidgetException {
+    public Event test(SensorChangeEvent se, boolean override) throws PhidgetException {
         Sensor eventSensor;
 
         try {
@@ -64,9 +68,24 @@ public class EqualEventRule implements EventRule {
 
         if(eventSensor.getName().equals(sensorName)){
             if(sensorController.getVal(eventSensor) == val){
-                return new Event(name, description);
+                if(canFire() || override){
+                    return new Event(name, description);
+                }
             }
         }
         return null;
     }
+
+    public Event test() throws PhidgetException {
+        if(sensorController.getVal(sensorName) == val){
+            return new Event(name, description);
+        }
+        return null;
+    }
+
+    @Override
+    public type getType() {
+        return type.EQUAL;
+    }
+
 }

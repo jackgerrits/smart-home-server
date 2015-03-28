@@ -5,13 +5,13 @@
       "type": "change",
       "name": "door",
       "description": "Door opened/closed",
-      "sensor": "magSwitch",
+      "sensor": "magSwitch"
     },
     {
       "type": "change",
       "name": "sensorTouch",
       "description": "Sensor touched.",
-      "sensor": "touch",
+      "sensor": "touch"
     },
     {
       "type": "equal",
@@ -33,7 +33,7 @@
       "type": "and",
       "name": "alarm",
       "description": "Door closed and sensor touched",
-      "events": ["doorClosed","sensorTouch"],
+      "events": ["doorClosed","sensorTouch"]
     }
   ]
 }

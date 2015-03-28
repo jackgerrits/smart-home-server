@@ -10,8 +10,8 @@ import java.util.Properties;
  * Created by Jack on 21/03/2015.
  */
 public class Options {
-    String filename;
-    Properties properties;
+    private String filename;
+    private Properties properties;
 
     public Options(String filename){
         this.filename = filename;
@@ -24,13 +24,14 @@ public class Options {
             System.out.println(filename + " not found");
             System.exit(1);
         }
-
+        System.out.println("Reading options file...");
         try {
             properties.load(in);
             in.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("Options read successfully!");
     }
 
     public ArrayList<Sensor> getSensors() {

@@ -1,6 +1,6 @@
 package com.jackgerrits;
 
-import com.jackgerrits.handlers.PushHandler;
+import com.jackgerrits.handlers.FeedHandler;
 import com.jackgerrits.handlers.SensorHandler;
 import com.jackgerrits.handlers.StaticHandler;
 import com.sun.net.httpserver.BasicAuthenticator;
@@ -15,13 +15,13 @@ import java.util.concurrent.Executors;
  * Created by Jack on 21/03/2015.
  */
 public class Server {
-    int port;
-    SensorController sensorController;
-    Options options;
-    HttpServer server = null;
-    PushHandler ps;
-    final String username;
-    final String password;
+    private int port;
+    private SensorController sensorController;
+    private Options options;
+    private HttpServer server = null;
+    private FeedHandler ps;
+    private final String username;
+    private final String password;
     
 
     //runs webserver and application server
@@ -44,8 +44,8 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ps = new PushHandler(sensorController);
-        server.createContext("/push", ps).setAuthenticator(bAuth);
+        ps = new FeedHandler(sensorController);
+        server.createContext("/data/feed", ps).setAuthenticator(bAuth);
         server.createContext("/data/sensors", new SensorHandler(sensorController)).setAuthenticator(bAuth);
         server.createContext("/", new StaticHandler()).setAuthenticator(bAuth);
         server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());

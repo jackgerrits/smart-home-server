@@ -19,7 +19,7 @@ public class StaticHandler implements HttpHandler {
     }
 
     public void handle(HttpExchange t) throws IOException {
-        System.out.println("Serving: " + t.getRequestURI().getPath());
+        System.out.println("[Static] Serving: " + t.getRequestURI().getPath());
         String root = System.getProperty("user.dir");
         URI uri = t.getRequestURI();
         String filePath =  "/www" + uri.getPath();

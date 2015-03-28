@@ -1,21 +1,17 @@
 package com.jackgerrits.handlers;
 
-import com.jackgerrits.Sensor;
 import com.jackgerrits.SensorController;
 import com.phidgets.PhidgetException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Created by Jack on 21/03/2015.
@@ -34,24 +30,22 @@ public class SensorHandler implements HttpHandler {
     public void handle(HttpExchange t) throws IOException {
         URI uri = t.getRequestURI();
         String path = uri.getPath();
-        System.out.println(uri.getPath());
 
         if (path.equals("/data/sensors")){
             JSONObject obj = new JSONObject();
             JSONArray sensors =  new JSONArray();
 
-            for(String str : connectedSensors){
-                sensors.add(str);
-            }
+            Collections.addAll(sensors, connectedSensors);
 
             obj.put("sensors",sensors);
+            System.out.println("[Sensors] Serving: /data/sensors");
             t.sendResponseHeaders(200, obj.toString().length());
             OutputStream os = t.getResponseBody();
             os.write(obj.toString().getBytes());
             os.close();
         } else if ((path.length() > 13) && (Arrays.asList(connectedSensors).contains(path.substring(14)))){
             String sensorName = path.substring(14);
-            System.out.println(path.substring(14));
+            System.out.println("[Sensors] Serving: /data/sensors/"+ sensorName);
             JSONObject obj = new JSONObject();
             int value = -1;
             try{

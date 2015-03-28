@@ -8,9 +8,9 @@ import java.util.Date;
  * Created by Jack on 21/03/2015.
  */
 public class Event {
-    String name;
-    String contents;
-    long time;
+    private String name;
+    private String contents;
+    private long time;
 
     public Event(String name, String contents){
         this.name = name;

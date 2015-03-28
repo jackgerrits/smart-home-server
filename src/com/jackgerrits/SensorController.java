@@ -16,13 +16,13 @@ import java.util.NoSuchElementException;
  * Created by Jack on 21/03/2015.
  */
 public class SensorController {
-    ArrayList<Sensor> sensors;
-    InterfaceKitPhidget ik;
-    LinkedList<Event> events;
-    Options ops;
-    String ip;
-    int port;
-    EventTester eventTester;
+    private ArrayList<Sensor> sensors;
+    private InterfaceKitPhidget ik;
+    private LinkedList<Event> events;
+    private Options ops;
+    private String ip;
+    private int port;
+    private EventTester eventTester;
 
     public SensorController(String ip, int port, Options ops){
         sensors = ops.getSensors();
@@ -30,7 +30,7 @@ public class SensorController {
         this.port = port;
         this.ops = ops;
         events = new LinkedList<Event>();
-        eventTester = new EventTester(this);
+        eventTester = new EventTester(this, ops);
         eventTester.loadEvents("TEST");
 
         try {
@@ -60,30 +60,21 @@ public class SensorController {
         ik.addInputChangeListener(new InputChangeListener() {
             @Override
             public void inputChanged(InputChangeEvent ie) {
-                Event current = null;
                 try {
-                    current = eventTester.evalEvent(ie);
+                    addEvents(eventTester.evalEvent(ie));
                 } catch (PhidgetException e) {
                     e.printStackTrace();
-                }
-                if(current != null){
-                    addEvent(current);
                 }
             }
         });
 
-        ik.addSensorChangeListener(new SensorChangeListener()
-        {
+        ik.addSensorChangeListener(new SensorChangeListener() {
             @Override
             public void sensorChanged(SensorChangeEvent se) {
-                Event current = null;
                 try {
-                    current = eventTester.evalEvent(se);
+                    addEvents(eventTester.evalEvent(se));
                 } catch (PhidgetException e) {
                     e.printStackTrace();
-                }
-                if(current != null){
-                    addEvent(current);
                 }
             }
         });
@@ -97,7 +88,7 @@ public class SensorController {
         return sensorNames;
     }
 
-    public Sensor getSensor(String sensorName) throws NoSuchElementException {
+    Sensor getSensor(String sensorName) throws NoSuchElementException {
         for (int i = 0; i < sensors.size(); i++) {
             if (sensors.get(i).getName().equals(sensorName)){
                 return sensors.get(i);
@@ -118,8 +109,8 @@ public class SensorController {
     public int getVal(String sensorName) throws PhidgetException {
         Sensor sensor = getSensor(sensorName);
         if(sensor.getType() == Sensor.sensorType.DIGITAL){
-            System.out.println( ik.getOutputState(sensor.getPort()));
-            System.out.println(sensor.getPort());
+//            System.out.println( ik.getOutputState(sensor.getPort()));
+//            System.out.println(sensor.getPort());
             return ik.getInputState(sensor.getPort()) ? 1 : 0;
 
         } else {
@@ -129,8 +120,6 @@ public class SensorController {
 
     public int getVal(Sensor sensor) throws PhidgetException {
         if(sensor.getType() == Sensor.sensorType.DIGITAL){
-            System.out.println( ik.getOutputState(sensor.getPort()));
-            System.out.println(sensor.getPort());
             return ik.getInputState(sensor.getPort()) ? 1 : 0;
 
         } else {
@@ -142,14 +131,15 @@ public class SensorController {
         return !events.isEmpty();
     }
 
-    public void addEvent(Event in){
-        //Many events are fired for one real life event, this helps reduce the stutter
-        if(events.isEmpty()){
-            events.add(in);
-        } else {
-            //only add event if it isnt within 2 seconds of last event from same sensor
-            if((Math.abs(events.getLast().getTime() - in.getTime()) > ops.getEventTimeout()) && events.getLast().getName() == in.getName()){
-                events.add(in);
+    void addEvent(Event in){
+        //EventRules now handle issue of rapid firing
+        events.add(in);
+    }
+
+    void addEvents(ArrayList<Event> events){
+        if(!events.isEmpty()) {
+            for (Event event : events) {
+                addEvent(event);
             }
         }
     }

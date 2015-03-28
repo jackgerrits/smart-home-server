@@ -12,17 +12,16 @@ import java.io.OutputStream;
 /**
  * Created by Jack on 21/03/2015.
  */
-public class PushHandler implements HttpHandler {
-    SensorController sensorController;
-    boolean killed = false;
+public class FeedHandler implements HttpHandler {
+    private SensorController sensorController;
+    private boolean killed = false;
 
-    public PushHandler(SensorController sensorController){
+    public FeedHandler(SensorController sensorController){
         this.sensorController = sensorController;
     }
 
     public void handle(HttpExchange t) throws IOException {
-        System.out.println(t.getRequestURI().getPath());
-        System.out.println("Received push request");
+        System.out.println("[Feed] Received feed request");
 
         //hold thread until there is an event ready
         while(!sensorController.areEvents()){
@@ -38,6 +37,7 @@ public class PushHandler implements HttpHandler {
         }
 
         Event current = sensorController.getEvent();
+        System.out.println("[Feed] Serving event: "+ current.getName());
         JSONObject obj = new JSONObject();
         obj.put("name", current.getName());
         obj.put("contents", current.getContents());
@@ -47,7 +47,7 @@ public class PushHandler implements HttpHandler {
         OutputStream os = t.getResponseBody();
         os.write(obj.toString().getBytes());
         os.close();
-        System.out.println("responded to push");
+
     }
 
     public void stop(){
