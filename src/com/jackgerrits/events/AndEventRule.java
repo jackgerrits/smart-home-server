@@ -11,7 +11,6 @@ import com.phidgets.event.SensorChangeEvent;
  */
 public class AndEventRule extends EventRule {
 
-    private String name;
     private String description;
     private EventRule rule1;
     private EventRule rule2;
@@ -20,12 +19,11 @@ public class AndEventRule extends EventRule {
 
     /*
      * AND event works for CHANGE and EQUAL events (Currently threshold events arent supported due to complexity)
-     * Two things cannot change at the same moment so therefoer
+     * Two things cannot change at the same moment so therefore this isnt possible.
      */
 
     public AndEventRule(String name, String description, EventRule r1, EventRule r2, SensorController sc, Options ops){
-        super(ops);
-        this.name = name;
+        super(name, ops);
         this.description = description;
         rule1 = r1;
         rule2 = r2;

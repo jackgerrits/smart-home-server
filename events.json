@@ -18,22 +18,25 @@
       "name": "doorClosed",
       "description": "Door closed",
       "sensor": "magSwitch",
-      "val": 1
+      "value": 1
     },
     {
       "type": "threshold",
-      "name-lt": "lightOn",
-      "name-gt": "lightOff",
-      "description-lt": "The light has been turned on.",
-      "description-gt": "The light has been turned off.",
+      "name": "lightStatus",
+      "name_lt": "lightOff",
+      "name_gt": "lightOn",
+      "description_lt": "The light has been turned off.",
+      "description_gt": "The light has been turned on.",
       "sensor": "light",
-      "val": 30
+      "value": 30
     },
     {
       "type": "and",
       "name": "alarm",
       "description": "Door closed and sensor touched",
-      "events": ["doorClosed","sensorTouch"]
+      "event1": "doorClosed",
+      "event2": "sensorTouch"
     }
+
   ]
 }

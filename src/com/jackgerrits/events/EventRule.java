@@ -13,11 +13,13 @@ public abstract class EventRule {
         EQUAL, CHANGE, THRESHOLD, AND, OR
     }
 
+    String name;
     Options ops;
     int timeout;
     long lastReturn;
 
-    public EventRule(Options ops){
+    public EventRule(String name, Options ops){
+        this.name = name;
         this.ops = ops;
         timeout = ops.getEventTimeout();
         lastReturn = System.currentTimeMillis();
@@ -30,6 +32,10 @@ public abstract class EventRule {
             return true;
         }
         return false;
+    }
+
+    public String getName(){
+        return name;
     }
 
     public abstract Event test(InputChangeEvent ie, boolean override) throws PhidgetException;

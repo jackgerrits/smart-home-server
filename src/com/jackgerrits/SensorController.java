@@ -30,8 +30,10 @@ public class SensorController {
         this.port = port;
         this.ops = ops;
         events = new LinkedList<Event>();
+        System.out.println("Loading event definitions...");
         eventTester = new EventTester(this, ops);
-        eventTester.loadEvents("TEST");
+        eventTester.loadEvents("events.json");
+        System.out.println("Event definitions loaded successfully!");
 
         try {
             ik = new InterfaceKitPhidget();

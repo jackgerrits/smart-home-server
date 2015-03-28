@@ -14,15 +14,13 @@ import java.util.NoSuchElementException;
  */
 public class ChangeEventRule extends EventRule {
 
-    private String name;
     private String description;
     private String sensorName;
     private SensorController sensorController;
 
 
     public ChangeEventRule(String name, String description, String sensorName, SensorController sensorController, Options ops){
-        super(ops);
-        this.name = name;
+        super(name, ops);
         this.description = description;
         this.sensorName = sensorName;
         this.sensorController = sensorController;

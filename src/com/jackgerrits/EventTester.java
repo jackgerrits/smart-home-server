@@ -21,12 +21,14 @@ public class EventTester {
     }
 
     public void loadEvents(String filename){
-        rules = new ArrayList<>();
-        rules.add(new EqualEventRule("doorOpened", "Door opened.", "magSwitch", 0, sensorController,ops));
-        rules.add(new EqualEventRule("doorClosed", "Door closed.", "magSwitch", 1, sensorController, ops));
-        rules.add(new ChangeEventRule("touch", "Touch sensor touched.", "touch", sensorController, ops));
-        rules.add(new AndEventRule("alarm", "door open and sensor touched", rules.get(2), rules.get(0), sensorController, ops));
-        rules.add(new ThresholdEventRule("lightOff", "lightOn", "Room is dark.", "Room is bright.", "light", 30, sensorController, ops));
+        EventReader reader = new EventReader(filename, sensorController, ops);
+        rules = reader.getEventRules();
+//        rules = new ArrayList<>();
+//        rules.add(new EqualEventRule("doorOpened", "Door opened.", "magSwitch", 0, sensorController,ops));
+//        rules.add(new EqualEventRule("doorClosed", "Door closed.", "magSwitch", 1, sensorController, ops));
+//        rules.add(new ChangeEventRule("touch", "Touch sensor touched.", "touch", sensorController, ops));
+//        rules.add(new AndEventRule("alarm", "door open and sensor touched", rules.get(2), rules.get(0), sensorController, ops));
+//        rules.add(new ThresholdEventRule("name", "lightOff", "lightOn", "Room is dark.", "Room is bright.", "light", 30, sensorController, ops));
 
     }
 

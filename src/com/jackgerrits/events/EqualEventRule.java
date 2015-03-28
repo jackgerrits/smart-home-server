@@ -14,15 +14,13 @@ import java.util.NoSuchElementException;
  */
 public class EqualEventRule extends EventRule {
 
-    private String name;
     private String description;
     private String sensorName;
     private int val;
     private SensorController sensorController;
 
     public EqualEventRule(String name, String description, String sensorName, int val, SensorController sensorController, Options ops){
-        super(ops);
-        this.name = name;
+        super(name, ops);
         this.description = description;
         this.sensorName = sensorName;
         this.val = val;
