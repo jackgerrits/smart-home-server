@@ -78,6 +78,22 @@ public class Options {
         }
     }
 
+    public String getSSLPassword(){
+        if(properties.containsKey("ssl-password") && !properties.getProperty("ssl-password").equals("")) {
+            return properties.getProperty("ssl-password");
+        } else {
+            return "password";
+        }
+    }
+
+    public String getSSLKeystore(){
+        if(properties.containsKey("ssl-keystore") && !properties.getProperty("ssl-keystore").equals("")) {
+            return properties.getProperty("ssl-keystore");
+        } else {
+            return "keystore";
+        }
+    }
+
     public int getEventTimeout(){
         if(properties.containsKey("event-timeout") && !properties.getProperty("event-timeout").equals("")) {
             return Integer.parseInt(properties.getProperty("event-timeout"));

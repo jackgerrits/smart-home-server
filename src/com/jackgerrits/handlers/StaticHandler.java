@@ -2,6 +2,7 @@ package com.jackgerrits.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpsExchange;
 
 import java.io.File;
 import java.io.FileInputStream;

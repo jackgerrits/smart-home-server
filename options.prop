@@ -4,6 +4,9 @@ server-port=7777
 username=admin
 password=cheese
 
+ssl-password=securepassword
+ssl-keystore=store
+
 #options for phidget
 phidget-ip=192.168.0.21
 phidget-port=5001
