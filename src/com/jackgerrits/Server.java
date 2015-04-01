@@ -3,12 +3,17 @@ package com.jackgerrits;
 import com.jackgerrits.handlers.FeedHandler;
 import com.jackgerrits.handlers.SensorHandler;
 import com.jackgerrits.handlers.StaticHandler;
-import com.sun.net.httpserver.BasicAuthenticator;
-import com.sun.net.httpserver.HttpContext;
-import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.*;
+import com.sun.net.httpserver.HttpExchange;
+import sun.net.httpserver.HttpsServerImpl;
 
+import javax.net.ssl.*;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.security.*;
+import java.security.cert.CertificateException;
 import java.util.concurrent.Executors;
 
 /**
@@ -18,7 +23,7 @@ public class Server {
     private int port;
     private SensorController sensorController;
     private Options options;
-    private HttpServer server = null;
+    private HttpsServer server = null;
     private FeedHandler ps;
     private final String username;
     private final String password;
@@ -39,16 +44,46 @@ public class Server {
             }
         };
 
+        SSLContext sslContext = null;
         try {
-            server = HttpServer.create(new InetSocketAddress(port), 0);
-        } catch (IOException e) {
+            server = HttpsServer.create(new InetSocketAddress(port), 0);
+
+            sslContext = SSLContext.getInstance("TLS");
+            char[] sslPassword = options.getSSLPassword().toCharArray();
+            KeyStore keystore = KeyStore.getInstance("JKS");
+            FileInputStream keystoreFile = new FileInputStream(options.getSSLKeystore());
+            keystore.load(keystoreFile, sslPassword);
+
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf.init( keystore, sslPassword );
+
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+            tmf.init(keystore);
+
+            sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), new SecureRandom());
+
+        } catch (IOException | CertificateException | KeyStoreException | KeyManagementException | UnrecoverableKeyException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
+
+
+        HttpsConfigurator httpsConfigurator = new HttpsConfigurator(sslContext) {
+            @Override
+            public void configure(HttpsParameters httpsParameters) {
+                SSLContext sslContext = getSSLContext();
+                SSLParameters defaultSSLParameters = sslContext.getDefaultSSLParameters();
+//                httpsParameters.setNeedClientAuth(true);
+                httpsParameters.setSSLParameters(defaultSSLParameters);
+            }
+        };
+
         ps = new FeedHandler(sensorController);
         server.createContext("/data/feed", ps).setAuthenticator(bAuth);
         server.createContext("/data/sensors", new SensorHandler(sensorController)).setAuthenticator(bAuth);
         server.createContext("/", new StaticHandler()).setAuthenticator(bAuth);
-        server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
+        server.setExecutor(Executors.newCachedThreadPool());
+        server.setHttpsConfigurator(httpsConfigurator);
+
         System.out.println("Starting server on port " + port + "...");
         server.start();
         System.out.println("Server started successfully!");
@@ -61,22 +96,50 @@ public class Server {
         username = options.getUsername();
         password = options.getPassword();
 
-        try {
-            server = HttpServer.create(new InetSocketAddress(port), 0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        HttpContext hc = server.createContext("/", new StaticHandler());
-        hc.setAuthenticator(new BasicAuthenticator("get") {
-
+        BasicAuthenticator bAuth = new BasicAuthenticator("get") {
             @Override
             public boolean checkCredentials(String user, String pwd) {
                 return user.equals(username) && pwd.equals(password);
             }
-        });
+        };
 
+        SSLContext sslContext = null;
+        try {
+            server = HttpsServer.create(new InetSocketAddress(port), 0);
+
+            sslContext = SSLContext.getInstance("TLS");
+            char[] sslPassword = options.getSSLPassword().toCharArray();
+            KeyStore keystore = KeyStore.getInstance("JKS");
+            FileInputStream keystoreFile = new FileInputStream(options.getSSLKeystore());
+            keystore.load(keystoreFile, sslPassword);
+
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf.init( keystore, sslPassword );
+
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+            tmf.init(keystore);
+
+            sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), new SecureRandom());
+
+        } catch (IOException | CertificateException | KeyStoreException | KeyManagementException | UnrecoverableKeyException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+
+        HttpsConfigurator httpsConfigurator = new HttpsConfigurator(sslContext) {
+            @Override
+            public void configure(HttpsParameters httpsParameters) {
+                SSLContext sslContext = getSSLContext();
+                SSLParameters defaultSSLParameters = sslContext.getDefaultSSLParameters();
+//                httpsParameters.setNeedClientAuth(true);
+                httpsParameters.setSSLParameters(defaultSSLParameters);
+            }
+        };
+
+        server.createContext("/", new StaticHandler()).setAuthenticator(bAuth);
         server.setExecutor(Executors.newCachedThreadPool());
+        server.setHttpsConfigurator(httpsConfigurator);
+
         System.out.println("Starting server on port " + port + "...");
         server.start();
         System.out.println("Server started successfully!");

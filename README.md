@@ -8,9 +8,13 @@ Web/application server for interfacing with client and connected Phidget.
 
 ###Installation
 1. Compile with libraries
-2. Put client in www directory at root of repo
-3. Modify options.prop with correct information
-4. Run
+2. Generate keystore for SSL using
+```
+keytool -genkey -alias _alias_ -keyalg RSA -keystore _keystore.jks_ -keysize 2048
+```
+3. Put client in www directory at root of repository
+4. Modify options.prop with correct information
+5. Run
 
 Ensure that correct sensors are in the corresponding places in _options.prop_, since they are analog there is no way to tell if there is no sensor connected or if the value is just 0.
 
