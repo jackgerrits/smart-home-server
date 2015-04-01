@@ -9,7 +9,9 @@ Web/application server for interfacing with client and connected Phidget.
 ###Installation
 1. Compile with libraries
 2. Generate keystore for SSL using
-    keytool -genkey -alias _alias_ -keyalg RSA -keystore _keystore.jks_ -keysize 2048
+```
+keytool -genkey -alias _alias_ -keyalg RSA -keystore _keystore.jks_ -keysize 2048
+```
 3. Put client in www directory at root of repository
 4. Modify options.prop with correct information
 5. Run
