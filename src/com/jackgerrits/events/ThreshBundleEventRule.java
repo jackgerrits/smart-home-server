@@ -12,7 +12,7 @@ public class ThreshBundleEventRule extends EventRule{
     String subName;
 
     public ThreshBundleEventRule(ThresholdEventRule er, String subName){
-        super("anonymous", null);
+        super(subName, null);
         this.er = er;
         this.subName = subName;
     }

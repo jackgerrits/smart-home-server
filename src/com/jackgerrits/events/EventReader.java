@@ -19,16 +19,16 @@ public class EventReader {
     String filename;
     SensorController sensorController;
     Options ops;
-    ArrayList<EventRule> rules;
+    RulesContainer container;
 
     public EventReader(String filename, SensorController sensorController, Options ops){
         this.filename = filename;
         this.sensorController = sensorController;
         this.ops = ops;
-        rules = new ArrayList<>();
+        container = new RulesContainer();
     }
 
-    public ArrayList<EventRule> getEventRules(){
+    public RulesContainer getContainer(){
         JSONParser parser = new JSONParser();
         FileReader fr = null;
 
@@ -45,7 +45,7 @@ public class EventReader {
                     Integer val = null;
 
                     name = (String) current.get("name");
-                    if(getEventRule(name)!=null){
+                    if(container.getEventRule(name)!=null){
                         System.out.println("JSON ERROR: Repeated event name: " + name);
                         System.exit(1);
                     }
@@ -59,7 +59,7 @@ public class EventReader {
                                 System.out.println("JSON ERROR: Missing field. Required fields for change: [type, name, description, sensor]");
                                 System.exit(1);
                             } else {
-                                rules.add(new ChangeEventRule(name, description, sensor, sensorController, ops));
+                                container.add(new ChangeEventRule(name, description, sensor, sensorController, ops));
                             }
                             break;
                         case "equal":
@@ -72,7 +72,7 @@ public class EventReader {
                                 System.out.println("JSON ERROR: Missing field. Required fields for equal: [type, name, description, sensor, value]");
                                 System.exit(1);
                             } else {
-                                rules.add(new EqualEventRule(name, description, sensor, val, sensorController, ops));
+                                container.add(new EqualEventRule(name, description, sensor, val, sensorController, ops));
                             }
 
                             break;
@@ -88,7 +88,7 @@ public class EventReader {
                                 System.out.println("JSON ERROR: Missing field. Required fields for threshold: [type, name, name_lt, name_gt, description_lt, description_gt, sensor, value]");
                                 System.exit(1);
                             } else {
-                                rules.add(new ThresholdEventRule(name, name_lt, name_gt, description_lt, description_gt, sensor, val, sensorController, ops));
+                                container.add((new ThresholdEventRule(name, name_lt, name_gt, description_lt, description_gt, sensor, val, sensorController, ops)));
                             }
                             break;
                         case "and":
@@ -100,8 +100,8 @@ public class EventReader {
                                 System.out.println("JSON ERROR: Missing field. Required fields for and: [type, name, description, event1, event2]");
                                 System.exit(1);
                             } else {
-                                EventRule r1 = getEventRule(event1);
-                                EventRule r2 = getEventRule(event2);
+                                EventRule r1 = container.getEventRule(event1);
+                                EventRule r2 = container.getEventRule(event2);
 
                                 if( r1 == null || r2 == null){
                                     System.out.println("JSON ERROR: Supplied EventRules for AND are not defined.");
@@ -125,7 +125,7 @@ public class EventReader {
                                     //System.out.println("JSON ERROR: Missing field. Threshold event in AND rule requires \"event#-subame\" to define threshold state to test.");
                                 }
 
-                                rules.add(new AndEventRule(name, description, r1, r2, sensorController, ops));
+                                container.add(new AndEventRule(name, description, r1, r2, sensorController, ops));
 
                             }
                             break;
@@ -155,15 +155,47 @@ public class EventReader {
                 e.printStackTrace();
             }
         }
-        return rules;
+        return container;
     }
 
-    public EventRule getEventRule(String name){
-        for(EventRule rule : rules){
-            if(rule.getName().equals(name)){
-                return rule;
+    public class RulesContainer {
+        ArrayList<AndEventRule> andEventRules;
+        ArrayList<EventRule> eventRules;
+
+        public RulesContainer(){
+            andEventRules = new ArrayList<>();
+            eventRules = new ArrayList<>();
+        }
+
+        public void add(EventRule rule){
+            if(rule.getType() == EventRule.type.AND){
+                andEventRules.add((AndEventRule)rule);
+            } else {
+                eventRules.add(rule);
             }
         }
-        return null;
+
+        public ArrayList<AndEventRule> getAndEventRules(){
+            return andEventRules;
+        }
+
+        public ArrayList<EventRule> getEventRules(){
+            return eventRules;
+        }
+
+        public EventRule getEventRule(String name){
+            for(EventRule rule : eventRules){
+                if(rule.getName().equals(name)){
+                    return rule;
+                }
+            }
+
+            for(EventRule rule : andEventRules){
+                if(rule.getName().equals(name)){
+                    return rule;
+                }
+            }
+            return null;
+        }
     }
 }

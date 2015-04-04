@@ -133,13 +133,13 @@ public class SensorController {
         return !events.isEmpty();
     }
 
-    void addEvent(Event in){
+    void addEvent(Event in) throws PhidgetException {
         //EventRules now handle issue of rapid firing
         events.add(in);
-
+        addEvents(eventTester.evalEvent(in));
     }
 
-    void addEvents(ArrayList<Event> events){
+    void addEvents(ArrayList<Event> events) throws PhidgetException {
         if(!events.isEmpty()) {
             for (Event event : events) {
                 addEvent(event);

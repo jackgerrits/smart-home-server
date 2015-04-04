@@ -42,6 +42,14 @@
       "description": "Door is open and lights changed.",
       "event1": "doorOpen",
       "event2": "lightStatus"
+    },
+    {
+      "type": "and",
+      "name": "test",
+      "description": "Door is open and lights have been turned on.",
+      "event1": "alarm",
+      "event2": "lightStatus",
+      "event2-subname": "lightOn"
     }
   ]
 }

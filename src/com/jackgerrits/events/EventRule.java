@@ -31,6 +31,13 @@ public abstract class EventRule {
         lastReturn = System.currentTimeMillis();
     }
 
+    public boolean isCorrespondingTo(Event event){
+        if(event.getName().equals(name)){
+            return true;
+        }
+        return false;
+    }
+
     public boolean canFire(){
         long timeNow = System.currentTimeMillis();
         if(Math.abs(timeNow - lastReturn) > timeout){

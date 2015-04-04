@@ -31,6 +31,7 @@ public class AndEventRule extends EventRule {
     }
 
 
+    /*redundant code*/
     @Override
     public Event test(InputChangeEvent ie, boolean override) throws PhidgetException {
         Event res1 = rule1.test(ie, true);
@@ -56,6 +57,22 @@ public class AndEventRule extends EventRule {
         return null;
     }
 
+    public Event test(Event event) throws PhidgetException {
+        if(rule1.isCorrespondingTo(event)){
+            if(rule2.test()!=null){
+                return new Event(name, description);
+            }
+        }
+
+        if(rule2.isCorrespondingTo(event)){
+            if(rule1.test() != null){
+                return new Event(name, description);
+            }
+        }
+        return null;
+    }
+
+    /*redundant code*/
     @Override
     public Event test(SensorChangeEvent se, boolean override) throws PhidgetException {
         Event res1 = rule1.test(se, true);
