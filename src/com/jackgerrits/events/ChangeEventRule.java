@@ -33,7 +33,7 @@ public class ChangeEventRule extends EventRule {
 
         if(eventSensor != null && eventSensor.getName().equals(sensorName)){
             if(override || canFire()){
-                return new Event(name, description, hideFromFeed);
+                return new Event(name, description, ie.getState()? 1 : 0, hideFromFeed);
             }
         }
         return null;
@@ -46,7 +46,7 @@ public class ChangeEventRule extends EventRule {
 
         if(eventSensor != null && eventSensor.getName().equals(sensorName)){
             if(override || canFire()){
-                return new Event(name, description, hideFromFeed);
+                return new Event(name, description, se.getValue(), hideFromFeed);
             }
         }
         return null;

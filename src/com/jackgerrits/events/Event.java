@@ -12,12 +12,22 @@ public class Event {
     private String contents;
     private long time;
     boolean hideFromFeed;
+    int value;
 
     public Event(String name, String contents, boolean hideFromFeed){
         this.name = name;
         this.contents = contents;
         this.time = System.currentTimeMillis();
         this.hideFromFeed = hideFromFeed;
+        value = 0;
+    }
+
+    public Event(String name, String contents, int value, boolean hideFromFeed){
+        this.name = name;
+        this.contents = contents;
+        this.time = System.currentTimeMillis();
+        this.hideFromFeed = hideFromFeed;
+        this.value = value;
     }
 
     public String getName(){
@@ -42,5 +52,7 @@ public class Event {
         return formatter.format(date);
     }
 
-
+    public int getValue(){
+       return value;
+    }
 }

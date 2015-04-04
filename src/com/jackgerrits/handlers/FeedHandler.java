@@ -42,6 +42,7 @@ public class FeedHandler implements HttpHandler {
         JSONObject obj = new JSONObject();
         obj.put("name", current.getName());
         obj.put("contents", current.getContents());
+        obj.put("value", current.getValue());
         obj.put("rawTime", current.getTime());
         obj.put("time", current.getFormattedTime());
         t.sendResponseHeaders(200, obj.toString().length());
