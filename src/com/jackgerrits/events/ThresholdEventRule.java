@@ -28,8 +28,8 @@ public class ThresholdEventRule extends EventRule {
         INIT, LT, GT
     }
 
-    public ThresholdEventRule(String name, String name_lt, String name_gt, String d_lt, String d_gt, String sensorName, int val, SensorController sc, Options ops){
-        super(name, ops);
+    public ThresholdEventRule(String name, String name_lt, String name_gt, String d_lt, String d_gt, String sensorName, int val, SensorController sc, Options ops, boolean hideFromFeed){
+        super(name, ops, hideFromFeed);
         this.name_lt = name_lt;
         this.name_gt = name_gt;
         this.description_lt = d_lt;
@@ -57,12 +57,12 @@ public class ThresholdEventRule extends EventRule {
             if((runningAverage > threshold) && (currentState != state.GT)){
                if(override || canFire()){
                     currentState = state.GT;
-                    return new Event(name_gt,description_gt);
+                    return new Event(name_gt,description_gt, hideFromFeed);
                 }
             } else if ((runningAverage < threshold) && (currentState != state.LT)){
                 if(override || canFire()){
                     currentState = state.LT;
-                    return new Event(name_lt,description_lt);
+                    return new Event(name_lt,description_lt, hideFromFeed);
                 }
             }
         }
@@ -79,13 +79,13 @@ public class ThresholdEventRule extends EventRule {
             int currentValue = sensorController.getVal(sensorName);
             runningAverage = runningAverage*0.6 + currentValue*0.4;
             if((runningAverage > threshold)){
-                return new Event(name_gt,description_gt);
+                return new Event(name_gt,description_gt, hideFromFeed);
             }
         } else if (subname.equals(name_lt)){
             int currentValue = sensorController.getVal(sensorName);
             runningAverage = runningAverage*0.6 + currentValue*0.4;
             if((runningAverage < threshold)){
-                return new Event(name_lt,description_lt);
+                return new Event(name_lt,description_lt, hideFromFeed);
             }
         }
         return null;

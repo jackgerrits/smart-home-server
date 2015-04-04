@@ -19,8 +19,8 @@ public class EqualEventRule extends EventRule {
     private int val;
     private SensorController sensorController;
 
-    public EqualEventRule(String name, String description, String sensorName, int val, SensorController sensorController, Options ops){
-        super(name, ops);
+    public EqualEventRule(String name, String description, String sensorName, int val, SensorController sensorController, Options ops, boolean hideFromFeed){
+        super(name, ops, hideFromFeed);
         this.description = description;
         this.sensorName = sensorName;
         this.val = val;
@@ -35,7 +35,7 @@ public class EqualEventRule extends EventRule {
         if(eventSensor != null && eventSensor.getName().equals(sensorName)){
             if(sensorController.getVal(eventSensor) == val){
                 if(override || canFire()){
-                    return new Event(name, description);
+                    return new Event(name, description, hideFromFeed);
                 }
             }
         }
@@ -50,7 +50,7 @@ public class EqualEventRule extends EventRule {
         if(eventSensor != null && eventSensor.getName().equals(sensorName)){
             if(sensorController.getVal(eventSensor) == val){
                 if(override || canFire()){
-                    return new Event(name, description);
+                    return new Event(name, description, hideFromFeed);
                 }
             }
         }
@@ -59,7 +59,7 @@ public class EqualEventRule extends EventRule {
 
     public Event test() throws PhidgetException {
         if(sensorController.getVal(sensorName) == val){
-            return new Event(name, description);
+            return new Event(name, description, hideFromFeed);
         }
         return null;
     }

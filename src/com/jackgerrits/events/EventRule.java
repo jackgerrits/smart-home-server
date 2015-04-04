@@ -19,8 +19,9 @@ public abstract class EventRule {
     Options ops;
     int timeout;
     long lastReturn;
+    boolean hideFromFeed;
 
-    public EventRule(String name, Options ops){
+    public EventRule(String name, Options ops, boolean hideFromFeed){
         this.name = name;
         this.ops = ops;
         if(ops!=null){
@@ -29,6 +30,7 @@ public abstract class EventRule {
             timeout = 1000;
         }
         lastReturn = System.currentTimeMillis();
+        this.hideFromFeed = hideFromFeed;
     }
 
     public boolean isCorrespondingTo(Event event){

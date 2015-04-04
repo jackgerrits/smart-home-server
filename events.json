@@ -41,7 +41,8 @@
       "name": "alarm",
       "description": "Door is open and lights changed.",
       "event1": "doorOpen",
-      "event2": "lightStatus"
+      "event2": "lightStatus",
+      "hide-from-feed": true
     },
     {
       "type": "and",

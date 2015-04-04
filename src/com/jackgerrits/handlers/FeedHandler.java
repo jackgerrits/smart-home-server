@@ -37,6 +37,7 @@ public class FeedHandler implements HttpHandler {
         }
 
         Event current = sensorController.getEvent();
+
         System.out.println("[Feed] Serving event: "+ current.getName());
         JSONObject obj = new JSONObject();
         obj.put("name", current.getName());

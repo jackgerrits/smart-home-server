@@ -22,8 +22,8 @@ public class AndEventRule extends EventRule {
      * To test whether state is in either of two threshold states, ThreshBundleEventRule must be passed containing the Threshold event and sub event name
      */
 
-    public AndEventRule(String name, String description, EventRule r1, EventRule r2, SensorController sc, Options ops){
-        super(name, ops);
+    public AndEventRule(String name, String description, EventRule r1, EventRule r2, SensorController sc, Options ops, boolean hideFromFeed){
+        super(name, ops, hideFromFeed);
         this.description = description;
         rule1 = r1;
         rule2 = r2;
@@ -39,18 +39,18 @@ public class AndEventRule extends EventRule {
 
         if(res1 != null && (rule2.test() != null) ){
             if(canFire() || override){
-                return new Event(name, description);
+                return new Event(name, description, hideFromFeed);
             }
         }
         if ((res2 != null) && (rule1.test() != null)){
             if(canFire() || override){
-                return new Event(name, description);
+                return new Event(name, description, hideFromFeed);
             }
         }
 
         if (res1 != null && res2 != null){
             if(override || canFire()){
-                return new Event(name, description);
+                return new Event(name, description, hideFromFeed);
             }
         }
 
@@ -60,13 +60,13 @@ public class AndEventRule extends EventRule {
     public Event test(Event event) throws PhidgetException {
         if(rule1.isCorrespondingTo(event)){
             if(rule2.test()!=null){
-                return new Event(name, description);
+                return new Event(name, description, hideFromFeed);
             }
         }
 
         if(rule2.isCorrespondingTo(event)){
             if(rule1.test() != null){
-                return new Event(name, description);
+                return new Event(name, description, hideFromFeed);
             }
         }
         return null;
@@ -80,18 +80,18 @@ public class AndEventRule extends EventRule {
 
         if((res1 != null) && (rule2.test() != null) ){
             if(override || canFire() ){
-                return new Event(name, description);
+                return new Event(name, description, hideFromFeed);
             }
         }
         if ((res2 != null) && (rule1.test() != null)){
             if(override || canFire()){
-                return new Event(name, description);
+                return new Event(name, description, hideFromFeed);
             }
         }
 
         if (res1 != null && res2 != null){
             if(override || canFire()){
-                return new Event(name, description);
+                return new Event(name, description, hideFromFeed);
             }
         }
 
@@ -101,7 +101,7 @@ public class AndEventRule extends EventRule {
     @Override
     public Event test() throws PhidgetException {
         if((rule1.test() != null) && (rule2.test() != null)){
-            return new Event(name, description);
+            return new Event(name, description, hideFromFeed);
         }
         return null;
     }

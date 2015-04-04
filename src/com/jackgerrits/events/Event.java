@@ -11,15 +11,21 @@ public class Event {
     private String name;
     private String contents;
     private long time;
+    boolean hideFromFeed;
 
-    public Event(String name, String contents){
+    public Event(String name, String contents, boolean hideFromFeed){
         this.name = name;
         this.contents = contents;
         this.time = System.currentTimeMillis();
+        this.hideFromFeed = hideFromFeed;
     }
 
     public String getName(){
         return name;
+    }
+
+    public boolean isHidden(){
+        return hideFromFeed;
     }
 
     public String getContents(){

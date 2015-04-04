@@ -135,8 +135,11 @@ public class SensorController {
 
     void addEvent(Event in) throws PhidgetException {
         //EventRules now handle issue of rapid firing
-        events.add(in);
+
         addEvents(eventTester.evalEvent(in));
+        if(!in.isHidden()){
+            events.add(in);
+        }
     }
 
     void addEvents(ArrayList<Event> events) throws PhidgetException {

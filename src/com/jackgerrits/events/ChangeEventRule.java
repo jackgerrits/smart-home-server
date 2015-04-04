@@ -19,8 +19,8 @@ public class ChangeEventRule extends EventRule {
     private SensorController sensorController;
 
 
-    public ChangeEventRule(String name, String description, String sensorName, SensorController sensorController, Options ops){
-        super(name, ops);
+    public ChangeEventRule(String name, String description, String sensorName, SensorController sensorController, Options ops, boolean hideFromFeed){
+        super(name, ops, hideFromFeed);
         this.description = description;
         this.sensorName = sensorName;
         this.sensorController = sensorController;
@@ -33,7 +33,7 @@ public class ChangeEventRule extends EventRule {
 
         if(eventSensor != null && eventSensor.getName().equals(sensorName)){
             if(override || canFire()){
-                return new Event(name, description);
+                return new Event(name, description, hideFromFeed);
             }
         }
         return null;
@@ -46,7 +46,7 @@ public class ChangeEventRule extends EventRule {
 
         if(eventSensor != null && eventSensor.getName().equals(sensorName)){
             if(override || canFire()){
-                return new Event(name, description);
+                return new Event(name, description, hideFromFeed);
             }
         }
         return null;
