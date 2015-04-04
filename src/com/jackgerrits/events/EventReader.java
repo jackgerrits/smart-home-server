@@ -108,7 +108,25 @@ public class EventReader {
                                     System.exit(1);
                                 }
 
+                                if(r1.getType() == EventRule.type.THRESHOLD){
+                                    String subName1 = (String) current.get("event1-subname");
+                                    if(subName1 != null){
+                                        r1 = new ThreshBundleEventRule((ThresholdEventRule)r1, subName1);
+                                    }
+                                     //System.out.println("JSON ERROR: Missing field. Threshold event in AND rule requires \"event#-subame\" to define threshold state to test.");
+
+                                }
+
+                                if(r2.getType() == EventRule.type.THRESHOLD){
+                                    String subName2 = (String) current.get("event2-subname");
+                                    if(subName2 != null){
+                                        r2 = new ThreshBundleEventRule((ThresholdEventRule)r2, subName2);
+                                    }
+                                    //System.out.println("JSON ERROR: Missing field. Threshold event in AND rule requires \"event#-subame\" to define threshold state to test.");
+                                }
+
                                 rules.add(new AndEventRule(name, description, r1, r2, sensorController, ops));
+
                             }
                             break;
 

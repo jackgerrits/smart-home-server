@@ -30,19 +30,11 @@ public class EqualEventRule extends EventRule {
     @Override
     public Event test(InputChangeEvent ie, boolean override) throws PhidgetException {
         Sensor eventSensor;
-        try {
-            eventSensor = sensorController.getSensor(ie.getIndex(), Sensor.sensorType.DIGITAL);
-        } catch (NoSuchElementException e){
-            e.printStackTrace();
-            System.out.println("Port: " + ie.getIndex() + ", DIGITAL");
-            System.out.println("State: " + ie.getState());
-            System.out.println("--------------");
-            return null;
-        }
+        eventSensor = sensorController.getSensor(ie.getIndex(), Sensor.sensorType.DIGITAL);
 
-        if(eventSensor.getName().equals(sensorName)){
+        if(eventSensor != null && eventSensor.getName().equals(sensorName)){
             if(sensorController.getVal(eventSensor) == val){
-                if(canFire() || override){
+                if(override || canFire()){
                     return new Event(name, description);
                 }
             }
@@ -53,20 +45,11 @@ public class EqualEventRule extends EventRule {
     @Override
     public Event test(SensorChangeEvent se, boolean override) throws PhidgetException {
         Sensor eventSensor;
+        eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG);
 
-        try {
-            eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG);
-        } catch (NoSuchElementException e){
-            e.printStackTrace();
-            System.out.println("Port: " + se.getIndex() + ", DIGITAL");
-            System.out.println("Value: " + se.getValue());
-            System.out.println("--------------");
-            return null;
-        }
-
-        if(eventSensor.getName().equals(sensorName)){
+        if(eventSensor != null && eventSensor.getName().equals(sensorName)){
             if(sensorController.getVal(eventSensor) == val){
-                if(canFire() || override){
+                if(override || canFire()){
                     return new Event(name, description);
                 }
             }

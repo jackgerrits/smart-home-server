@@ -5,12 +5,14 @@ import com.phidgets.PhidgetException;
 import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
 
+import java.util.NoSuchElementException;
+
 /**
  * Created by jackgerrits on 23/03/15.
  */
 public abstract class EventRule {
     public enum type {
-        EQUAL, CHANGE, THRESHOLD, AND, OR
+        EQUAL, CHANGE, THRESHOLD, AND, OR, BUNDLE
     }
 
     String name;
@@ -21,7 +23,11 @@ public abstract class EventRule {
     public EventRule(String name, Options ops){
         this.name = name;
         this.ops = ops;
-        timeout = ops.getEventTimeout();
+        if(ops!=null){
+            timeout = ops.getEventTimeout();
+        } else {
+            timeout = 1000;
+        }
         lastReturn = System.currentTimeMillis();
     }
 
@@ -38,7 +44,7 @@ public abstract class EventRule {
         return name;
     }
 
-    public abstract Event test(InputChangeEvent ie, boolean override) throws PhidgetException;
+    public abstract Event test(InputChangeEvent ie, boolean override) throws PhidgetException ;
     public abstract Event test(SensorChangeEvent se, boolean override) throws PhidgetException;
     public abstract Event test() throws PhidgetException;
     public abstract type getType();

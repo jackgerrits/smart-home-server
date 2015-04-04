@@ -6,6 +6,7 @@ import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 /**
  * Created by jackgerrits on 23/03/15.
@@ -37,7 +38,9 @@ public class EventTester {
         if (rules != null){
             for(EventRule rule : rules) {
                 Event result = rule.test(se, false);
+
                 if(result != null){
+                    System.out.println("Adding Event " + result.getName());
                     outcomes.add(result);
                 }
             }
@@ -49,7 +52,10 @@ public class EventTester {
         if (rules != null){
             for(EventRule rule : rules) {
                 Event result = rule.test(ie, false);
+
+                // System.out.println("[SENSOR ERROR] No such sensor at: [DIGITAL port: " + ie.getIndex() + ", value: " + ie.getState());
                 if(result != null){
+                    System.out.println("Adding Event " + result.getName());
                     outcomes.add(result);
                 }
             }

@@ -99,13 +99,13 @@ public class SensorController {
         throw new NoSuchElementException();
     }
 
-    public Sensor getSensor(int port, Sensor.sensorType type) throws NoSuchElementException {
+    public Sensor getSensor(int port, Sensor.sensorType type) {
         for (int i = 0; i < sensors.size(); i++) {
             if ((sensors.get(i).getPort() == port) && (sensors.get(i).getType() == type)){
                 return sensors.get(i);
             }
         }
-        throw new NoSuchElementException();
+        return null;
     }
 
     public int getVal(String sensorName) throws PhidgetException {
@@ -136,6 +136,7 @@ public class SensorController {
     void addEvent(Event in){
         //EventRules now handle issue of rapid firing
         events.add(in);
+
     }
 
     void addEvents(ArrayList<Event> events){

@@ -42,36 +42,25 @@ public class ThresholdEventRule extends EventRule {
     }
 
     //this rule does not make sense for a digital input, no point testing
-    public Event test(InputChangeEvent se, boolean override) throws PhidgetException {
+    public Event test(InputChangeEvent se, boolean override) {
         return null;
     }
 
     public Event test(SensorChangeEvent se, boolean override) throws PhidgetException {
         Sensor eventSensor;
+        eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG);
 
-        try {
-            eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG);
-        } catch (NoSuchElementException e){
-            e.printStackTrace();
-            System.out.println("Port: " + se.getIndex() + ", DIGITAL");
-            System.out.println("Value: " + se.getValue());
-            System.out.println("--------------");
-            return null;
-        }
-
-
-
-        if(eventSensor.getName().equals(sensorName)){
+        if(eventSensor != null && eventSensor.getName().equals(sensorName)){
             int currentValue = sensorController.getVal(eventSensor);
             //uses running average weighted more heavily on fast to reduce the impact of momentary spikes on output
             runningAverage = runningAverage*0.6 + currentValue*0.4;
             if((runningAverage > threshold) && (currentState != state.GT)){
-               if(canFire() || override){
+               if(override || canFire()){
                     currentState = state.GT;
                     return new Event(name_gt,description_gt);
                 }
             } else if ((runningAverage < threshold) && (currentState != state.LT)){
-                if(canFire() || override){
+                if(override || canFire()){
                     currentState = state.LT;
                     return new Event(name_lt,description_lt);
                 }
@@ -82,6 +71,23 @@ public class ThresholdEventRule extends EventRule {
 
     @Override
     public Event test() throws PhidgetException {
+        return null;
+    }
+
+    public Event test(String subname) throws PhidgetException {
+        if(subname.equals(name_gt)){
+            int currentValue = sensorController.getVal(sensorName);
+            runningAverage = runningAverage*0.6 + currentValue*0.4;
+            if((runningAverage > threshold)){
+                return new Event(name_gt,description_gt);
+            }
+        } else if (subname.equals(name_lt)){
+            int currentValue = sensorController.getVal(sensorName);
+            runningAverage = runningAverage*0.6 + currentValue*0.4;
+            if((runningAverage < threshold)){
+                return new Event(name_lt,description_lt);
+            }
+        }
         return null;
     }
 

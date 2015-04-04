@@ -1,5 +1,4 @@
 {
-  "COMMENT": "Due to event timeout to prevent too many events occuring, a change and greater/less than event wont fire together. Higher up events will fire first",
   "events": [
     {
       "type": "change",
@@ -16,9 +15,16 @@
     {
       "type": "equal",
       "name": "doorClosed",
-      "description": "Door closed",
+      "description": "Door closed.",
       "sensor": "magSwitch",
       "value": 1
+    },
+    {
+      "type": "equal",
+      "name": "doorOpen",
+      "description": "Door opened.",
+      "sensor": "magSwitch",
+      "value": 0
     },
     {
       "type": "threshold",
@@ -33,10 +39,9 @@
     {
       "type": "and",
       "name": "alarm",
-      "description": "Door closed and sensor touched",
-      "event1": "doorClosed",
-      "event2": "sensorTouch"
+      "description": "Door is open and lights changed.",
+      "event1": "doorOpen",
+      "event2": "lightStatus"
     }
-
   ]
 }

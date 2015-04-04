@@ -16,10 +16,10 @@ public class AndEventRule extends EventRule {
     private EventRule rule2;
     private SensorController sensorController;
 
-
     /*
-     * AND event works for CHANGE and EQUAL events (Currently threshold events arent supported due to complexity)
-     * Two things cannot change at the same moment so therefore this isnt possible.
+     * AND event works for CHANGE, EQUAL, THRESHOLD
+     * For testing whether event causes threshold to trip, standard threshold events can be added.
+     * To test whether state is in either of two threshold states, ThreshBundleEventRule must be passed containing the Threshold event and sub event name
      */
 
     public AndEventRule(String name, String description, EventRule r1, EventRule r2, SensorController sc, Options ops){
@@ -30,20 +30,29 @@ public class AndEventRule extends EventRule {
         sensorController = sc;
     }
 
+
     @Override
     public Event test(InputChangeEvent ie, boolean override) throws PhidgetException {
         Event res1 = rule1.test(ie, true);
         Event res2 = rule2.test(ie, true);
 
         if(res1 != null && (rule2.test() != null) ){
-            if(canFire()){
-                return new Event(name, description);
-            }
-        } else if ((res2 != null) && (rule1.test() != null)){
-            if(canFire()){
+            if(canFire() || override){
                 return new Event(name, description);
             }
         }
+        if ((res2 != null) && (rule1.test() != null)){
+            if(canFire() || override){
+                return new Event(name, description);
+            }
+        }
+
+        if (res1 != null && res2 != null){
+            if(override || canFire()){
+                return new Event(name, description);
+            }
+        }
+
         return null;
     }
 
@@ -53,23 +62,29 @@ public class AndEventRule extends EventRule {
         Event res2 = rule2.test(se, true);
 
         if((res1 != null) && (rule2.test() != null) ){
-            if(canFire() || override){
-                return new Event(name, description);
-            }
-        } else if ((res2 != null) && (rule1.test() != null)){
-            if(canFire() || override){
+            if(override || canFire() ){
                 return new Event(name, description);
             }
         }
+        if ((res2 != null) && (rule1.test() != null)){
+            if(override || canFire()){
+                return new Event(name, description);
+            }
+        }
+
+        if (res1 != null && res2 != null){
+            if(override || canFire()){
+                return new Event(name, description);
+            }
+        }
+
         return null;
     }
 
     @Override
     public Event test() throws PhidgetException {
         if((rule1.test() != null) && (rule2.test() != null)){
-            if(canFire()){
-                return new Event(name, description);
-            }
+            return new Event(name, description);
         }
         return null;
     }
