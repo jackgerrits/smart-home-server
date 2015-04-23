@@ -20,8 +20,8 @@ public class SensorHandler implements HttpHandler {
     SensorController sensorController;
     String[] connectedSensors;
 
-    public SensorHandler(SensorController sc){
-        this.sensorController = sc;
+    public SensorHandler(){
+        sensorController = SensorController.get();
         connectedSensors = sensorController.getConnectedSensors();
 
     }

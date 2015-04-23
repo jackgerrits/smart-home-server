@@ -3,14 +3,17 @@ package com.jackgerrits;
 import com.jackgerrits.handlers.FeedHandler;
 import com.jackgerrits.handlers.SensorHandler;
 import com.jackgerrits.handlers.StaticHandler;
-import com.sun.net.httpserver.*;
-import com.sun.net.httpserver.HttpExchange;
-import sun.net.httpserver.HttpsServerImpl;
+import com.sun.net.httpserver.BasicAuthenticator;
+import com.sun.net.httpserver.HttpsConfigurator;
+import com.sun.net.httpserver.HttpsParameters;
+import com.sun.net.httpserver.HttpsServer;
 
-import javax.net.ssl.*;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.TrustManagerFactory;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.security.*;
 import java.security.cert.CertificateException;
@@ -30,9 +33,9 @@ public class Server {
     
 
     //runs webserver and application server
-    public Server(SensorController sensorController, Options options){
-        this.options = options;
-        this.sensorController = sensorController;
+    public Server(){
+        options = Options.get();
+        sensorController = SensorController.get();
         port = options.getServerPort();
         username = options.getUsername();
         password = options.getPassword();
@@ -77,9 +80,9 @@ public class Server {
             }
         };
 
-        ps = new FeedHandler(sensorController);
+        ps = new FeedHandler();
         server.createContext("/data/feed", ps).setAuthenticator(bAuth);
-        server.createContext("/data/sensors", new SensorHandler(sensorController)).setAuthenticator(bAuth);
+        server.createContext("/data/sensors", new SensorHandler()).setAuthenticator(bAuth);
         server.createContext("/", new StaticHandler()).setAuthenticator(bAuth);
         server.setExecutor(Executors.newCachedThreadPool());
         server.setHttpsConfigurator(httpsConfigurator);
@@ -90,8 +93,9 @@ public class Server {
     }
 
     //just runs web server
-    public Server(Options options){
-        this.options = options;
+    /*
+    public Server(){
+        options = Options.get();
         port = options.getServerPort();
         username = options.getUsername();
         password = options.getPassword();
@@ -144,12 +148,16 @@ public class Server {
         server.start();
         System.out.println("Server started successfully!");
     }
+    */
 
     public void stop(){
         System.out.println("Server stopping...");
         server.stop(0);
         if(ps != null){
             ps.stop();
+        }
+        if(sensorController != null){
+            sensorController.stop();
         }
     }
 }

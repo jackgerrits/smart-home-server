@@ -17,16 +17,16 @@ import java.util.ArrayList;
  */
 public class EventReader {
     String filename;
-    SensorController sensorController;
     Options ops;
     RulesContainer container;
 
-    public EventReader(String filename, SensorController sensorController, Options ops){
+    public EventReader(String filename){
         this.filename = filename;
-        this.sensorController = sensorController;
-        this.ops = ops;
+        ops = Options.get();
         container = new RulesContainer();
     }
+
+
 
     public RulesContainer getContainer(){
         JSONParser parser = new JSONParser();
@@ -65,7 +65,7 @@ public class EventReader {
                                 System.out.println("JSON ERROR: Missing field. Required fields for change: [type, name, description, sensor]");
                                 System.exit(1);
                             } else {
-                                container.add(new ChangeEventRule(name, description, sensor, sensorController, ops, hidden));
+                                container.add(new ChangeEventRule(name, description, sensor, hidden));
                             }
                             break;
                         case "equal":
@@ -78,7 +78,7 @@ public class EventReader {
                                 System.out.println("JSON ERROR: Missing field. Required fields for equal: [type, name, description, sensor, value]");
                                 System.exit(1);
                             } else {
-                                container.add(new EqualEventRule(name, description, sensor, val, sensorController, ops, hidden));
+                                container.add(new EqualEventRule(name, description, sensor, val, hidden));
                             }
 
                             break;
@@ -94,7 +94,7 @@ public class EventReader {
                                 System.out.println("JSON ERROR: Missing field. Required fields for threshold: [type, name, name_lt, name_gt, description_lt, description_gt, sensor, value]");
                                 System.exit(1);
                             } else {
-                                container.add((new ThresholdEventRule(name, name_lt, name_gt, description_lt, description_gt, sensor, val, sensorController, ops, hidden)));
+                                container.add((new ThresholdEventRule(name, name_lt, name_gt, description_lt, description_gt, sensor, val, hidden)));
                             }
                             break;
                         case "and":
@@ -131,7 +131,7 @@ public class EventReader {
                                     //System.out.println("JSON ERROR: Missing field. Threshold event in AND rule requires \"event#-subame\" to define threshold state to test.");
                                 }
 
-                                container.add(new AndEventRule(name, description, r1, r2, sensorController, ops, hidden));
+                                container.add(new AndEventRule(name, description, r1, r2, hidden));
 
                             }
                             break;

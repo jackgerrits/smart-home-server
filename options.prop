@@ -20,7 +20,7 @@ event-timeout=2000
 
 analog0=
 analog1=
-analog2=
+analog2=motion
 analog3=light
 analog4=
 analog5=

@@ -24,14 +24,24 @@ public class SensorController {
     private int port;
     private EventTester eventTester;
 
-    public SensorController(String ip, int port, Options ops){
+    private static SensorController self;
+
+    public static SensorController get(){
+        if(self == null){
+            self = new SensorController();
+        }
+        return self;
+    }
+
+    public SensorController(){
+        self = this;
+        ops = Options.get();
         sensors = ops.getSensors();
-        this.ip = ip;
-        this.port = port;
-        this.ops = ops;
+        ip = ops.getPhidgetIp();
+        port = ops.getPhidgetPort();
         events = new LinkedList<Event>();
         System.out.println("Loading event definitions...");
-        eventTester = new EventTester(this, ops);
+        eventTester = new EventTester();
         eventTester.loadEvents("events.json");
         System.out.println("Event definitions loaded successfully!");
 

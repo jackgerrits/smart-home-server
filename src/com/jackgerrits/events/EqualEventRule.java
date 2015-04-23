@@ -17,14 +17,12 @@ public class EqualEventRule extends EventRule {
     private String description;
     private String sensorName;
     private int val;
-    private SensorController sensorController;
 
-    public EqualEventRule(String name, String description, String sensorName, int val, SensorController sensorController, Options ops, boolean hideFromFeed){
-        super(name, ops, hideFromFeed);
+    public EqualEventRule(String name, String description, String sensorName, int val, boolean hideFromFeed){
+        super(name, hideFromFeed);
         this.description = description;
         this.sensorName = sensorName;
         this.val = val;
-        this.sensorController = sensorController;
     }
 
     @Override

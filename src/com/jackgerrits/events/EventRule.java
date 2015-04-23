@@ -1,6 +1,7 @@
 package com.jackgerrits.events;
 
 import com.jackgerrits.Options;
+import com.jackgerrits.SensorController;
 import com.phidgets.PhidgetException;
 import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
@@ -17,13 +18,14 @@ public abstract class EventRule {
 
     String name;
     Options ops;
+    SensorController sensorController;
     int timeout;
     long lastReturn;
     boolean hideFromFeed;
 
-    public EventRule(String name, Options ops, boolean hideFromFeed){
+    public EventRule(String name, boolean hideFromFeed){
         this.name = name;
-        this.ops = ops;
+        ops = Options.get();
         if(ops!=null){
             timeout = ops.getEventTimeout();
         } else {
@@ -31,6 +33,7 @@ public abstract class EventRule {
         }
         lastReturn = System.currentTimeMillis();
         this.hideFromFeed = hideFromFeed;
+        this.sensorController = SensorController.get();
     }
 
     public boolean isCorrespondingTo(Event event){

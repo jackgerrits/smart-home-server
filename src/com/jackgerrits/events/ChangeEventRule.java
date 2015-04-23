@@ -7,8 +7,6 @@ import com.phidgets.PhidgetException;
 import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
 
-import java.util.NoSuchElementException;
-
 /**
  * Created by Jack on 28/03/2015.
  */
@@ -16,14 +14,11 @@ public class ChangeEventRule extends EventRule {
 
     private String description;
     private String sensorName;
-    private SensorController sensorController;
 
-
-    public ChangeEventRule(String name, String description, String sensorName, SensorController sensorController, Options ops, boolean hideFromFeed){
-        super(name, ops, hideFromFeed);
+    public ChangeEventRule(String name, String description, String sensorName, boolean hideFromFeed){
+        super(name, hideFromFeed);
         this.description = description;
         this.sensorName = sensorName;
-        this.sensorController = sensorController;
     }
 
     @Override

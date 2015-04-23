@@ -10,11 +10,18 @@ import java.util.Properties;
  * Created by Jack on 21/03/2015.
  */
 public class Options {
-    private String filename;
+    private static Options self = new Options();
+    private String filename = "options.prop";
     private Properties properties;
 
-    public Options(String filename){
-        this.filename = filename;
+    public static Options get() {
+        if(self == null){
+            self = new Options();
+        }
+        return self;
+    }
+
+    public Options(){
         properties = new Properties();
 
         FileInputStream in = null;

@@ -16,8 +16,8 @@ public class FeedHandler implements HttpHandler {
     private SensorController sensorController;
     private boolean killed = false;
 
-    public FeedHandler(SensorController sensorController){
-        this.sensorController = sensorController;
+    public FeedHandler(){
+        sensorController = SensorController.get();
     }
 
     public void handle(HttpExchange t) throws IOException {

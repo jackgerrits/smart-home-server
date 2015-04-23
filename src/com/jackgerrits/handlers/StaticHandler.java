@@ -2,7 +2,6 @@ package com.jackgerrits.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpsExchange;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,9 +14,6 @@ import java.nio.file.Files;
  * Created by Jack on 21/03/2015.
  */
 public class StaticHandler implements HttpHandler {
-
-    public StaticHandler(){
-    }
 
     public void handle(HttpExchange t) throws IOException {
         System.out.println("[Static] Serving: " + t.getRequestURI().getPath());

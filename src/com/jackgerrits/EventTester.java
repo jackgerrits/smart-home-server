@@ -17,16 +17,14 @@ import java.util.ArrayList;
 public class EventTester {
     private ArrayList<EventRule> rules;
     private ArrayList<AndEventRule> andRules;
-    private SensorController sensorController;
     Options ops;
 
-    public EventTester(SensorController sensorController, Options ops){
-        this.sensorController = sensorController;
-        this.ops = ops;
+    public EventTester(){
+        ops = Options.get();
     }
 
     public void loadEvents(String filename){
-        EventReader reader = new EventReader(filename, sensorController, ops);
+        EventReader reader = new EventReader(filename);
         RulesContainer rc = reader.getContainer();
 
         rules = rc.getEventRules();

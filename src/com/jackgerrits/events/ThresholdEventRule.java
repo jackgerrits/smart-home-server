@@ -21,22 +21,20 @@ public class ThresholdEventRule extends EventRule {
     private String sensorName;
     private int threshold;
     private double runningAverage;
-    private SensorController sensorController;
     private state currentState;
 
     private enum state {
         INIT, LT, GT
     }
 
-    public ThresholdEventRule(String name, String name_lt, String name_gt, String d_lt, String d_gt, String sensorName, int val, SensorController sc, Options ops, boolean hideFromFeed){
-        super(name, ops, hideFromFeed);
+    public ThresholdEventRule(String name, String name_lt, String name_gt, String d_lt, String d_gt, String sensorName, int val, boolean hideFromFeed){
+        super(name, hideFromFeed);
         this.name_lt = name_lt;
         this.name_gt = name_gt;
         this.description_lt = d_lt;
         this.description_gt = d_gt;
         this.sensorName = sensorName;
         this.threshold = val;
-        this.sensorController = sc;
         this.currentState = state.INIT;
         runningAverage = 0;
     }

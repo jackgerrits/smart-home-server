@@ -1,6 +1,7 @@
 package com.jackgerrits.events;
 
 import com.jackgerrits.Options;
+import com.jackgerrits.Sensor;
 import com.jackgerrits.SensorController;
 import com.phidgets.PhidgetException;
 import com.phidgets.event.InputChangeEvent;
@@ -14,7 +15,6 @@ public class AndEventRule extends EventRule {
     private String description;
     private EventRule rule1;
     private EventRule rule2;
-    private SensorController sensorController;
 
     /*
      * AND event works for CHANGE, EQUAL, THRESHOLD
@@ -22,12 +22,11 @@ public class AndEventRule extends EventRule {
      * To test whether state is in either of two threshold states, ThreshBundleEventRule must be passed containing the Threshold event and sub event name
      */
 
-    public AndEventRule(String name, String description, EventRule r1, EventRule r2, SensorController sc, Options ops, boolean hideFromFeed){
-        super(name, ops, hideFromFeed);
+    public AndEventRule(String name, String description, EventRule r1, EventRule r2, boolean hideFromFeed){
+        super(name, hideFromFeed);
         this.description = description;
         rule1 = r1;
         rule2 = r2;
-        sensorController = sc;
     }
 
 
