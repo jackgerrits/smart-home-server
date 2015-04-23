@@ -23,9 +23,7 @@ import java.util.concurrent.Executors;
  * Created by Jack on 21/03/2015.
  */
 public class Server {
-    private int port;
     private SensorController sensorController;
-    private Options options;
     private HttpsServer server = null;
     private FeedHandler ps;
     private final String username;
@@ -34,9 +32,9 @@ public class Server {
 
     //runs webserver and application server
     public Server(){
-        options = Options.get();
+        Options options = Options.get();
         sensorController = SensorController.get();
-        port = options.getServerPort();
+        int port = options.getServerPort();
         username = options.getUsername();
         password = options.getPassword();
 

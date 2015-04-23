@@ -7,7 +7,7 @@ import com.phidgets.event.InputChangeListener;
 import com.phidgets.event.SensorChangeEvent;
 import com.phidgets.event.SensorChangeListener;
 
-import java.util.ArrayList  ;
+import java.util.ArrayList;
 
 /**
  * Created by Jack on 23/04/2015.
@@ -112,25 +112,25 @@ public class Phidget {
 
     public ArrayList<String> getConnectedSensors(){
         ArrayList<String> res = new ArrayList<>();
-        for (int i = 0; i < sensors.size(); i++) {
-            res.add(sensors.get(i).getName());
+        for (Sensor sensor : sensors) {
+            res.add(sensor.getName());
         }
         return res;
     }
 
     Sensor getSensor(String sensorName) {
-        for (int i = 0; i < sensors.size(); i++) {
-            if (sensors.get(i).getName().equals(sensorName)){
-                return sensors.get(i);
+        for (Sensor sensor : sensors) {
+            if (sensor.getName().equals(sensorName)) {
+                return sensor;
             }
         }
         return null;
     }
 
     public Sensor getSensor(int port, Sensor.sensorType type) {
-        for (int i = 0; i < sensors.size(); i++) {
-            if ((sensors.get(i).getPort() == port) && (sensors.get(i).getType() == type)){
-                return sensors.get(i);
+        for (Sensor sensor : sensors) {
+            if ((sensor.getPort() == port) && (sensor.getType() == type)) {
+                return sensor;
             }
         }
         return null;
@@ -142,11 +142,7 @@ public class Phidget {
 
     public int getVal(String sensorName) throws PhidgetException {
         Sensor sensor = getSensor(sensorName);
-        if(sensor.getType() == Sensor.sensorType.DIGITAL){
-            return ik.getInputState(sensor.getPort()) ? 1 : 0;
-        } else {
-            return ik.getSensorValue(sensor.getPort());
-        }
+        return getVal(sensor);
     }
 
     public int getVal(Sensor sensor) throws PhidgetException {
@@ -167,7 +163,4 @@ public class Phidget {
         }
 
     }
-
-
-
 }

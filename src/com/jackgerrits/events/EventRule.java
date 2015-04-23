@@ -6,8 +6,6 @@ import com.phidgets.PhidgetException;
 import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
 
-import java.util.NoSuchElementException;
-
 /**
  * Created by jackgerrits on 23/03/15.
  */
@@ -42,10 +40,7 @@ public abstract class EventRule {
     }
 
     public boolean isCorrespondingTo(String eventName){
-        if(eventName.equals(name)){
-            return true;
-        }
-        return false;
+        return eventName.equals(name);
     }
 
     public boolean canFire(){

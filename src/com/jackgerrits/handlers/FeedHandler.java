@@ -1,7 +1,7 @@
 package com.jackgerrits.handlers;
 
-import com.jackgerrits.events.Event;
 import com.jackgerrits.SensorController;
+import com.jackgerrits.events.Event;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.simple.JSONObject;

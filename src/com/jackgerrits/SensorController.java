@@ -6,7 +6,6 @@ import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 

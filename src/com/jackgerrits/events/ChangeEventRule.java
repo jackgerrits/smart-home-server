@@ -1,8 +1,6 @@
 package com.jackgerrits.events;
 
-import com.jackgerrits.Options;
 import com.jackgerrits.Sensor;
-import com.jackgerrits.SensorController;
 import com.phidgets.PhidgetException;
 import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;

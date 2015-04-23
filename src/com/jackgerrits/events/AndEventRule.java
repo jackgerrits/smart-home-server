@@ -1,8 +1,5 @@
 package com.jackgerrits.events;
 
-import com.jackgerrits.Options;
-import com.jackgerrits.Sensor;
-import com.jackgerrits.SensorController;
 import com.phidgets.PhidgetException;
 import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
@@ -33,6 +30,7 @@ public class AndEventRule extends EventRule {
     /*redundant code*/
     @Override
     public Event test(InputChangeEvent ie, boolean override) throws PhidgetException {
+        /*
         Event res1 = rule1.test(ie, true);
         Event res2 = rule2.test(ie, true);
 
@@ -51,7 +49,7 @@ public class AndEventRule extends EventRule {
             if(override || canFire()){
                 return new Event(name, description, hideFromFeed);
             }
-        }
+        }*/
 
         return null;
     }
@@ -74,6 +72,7 @@ public class AndEventRule extends EventRule {
     /*redundant code*/
     @Override
     public Event test(SensorChangeEvent se, boolean override) throws PhidgetException {
+        /*
         Event res1 = rule1.test(se, true);
         Event res2 = rule2.test(se, true);
 
@@ -93,6 +92,7 @@ public class AndEventRule extends EventRule {
                 return new Event(name, description, hideFromFeed);
             }
         }
+        */
 
         return null;
     }

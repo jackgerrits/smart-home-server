@@ -2,7 +2,6 @@ package com.jackgerrits.events;
 
 import com.jackgerrits.Phidget;
 import com.jackgerrits.Sensor;
-import com.jackgerrits.SensorController;
 import com.phidgets.PhidgetException;
 import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.InputChangeListener;
@@ -17,7 +16,6 @@ import java.util.TimerTask;
  * Created by Jack on 23/04/2015.
  */
 public class EntityDetectionEventRule extends EventRule{
-
 
     boolean isOccupied = true;
     HashMap<String, String> paramList;
@@ -40,17 +38,12 @@ public class EntityDetectionEventRule extends EventRule{
 
     @Override
     public boolean isCorrespondingTo(String eventName){
-        if(eventName.equals(name) ||
+        return eventName.equals(name) ||
                 eventName.equals(paramList.get("name-enter")) ||
                 eventName.equals(paramList.get("name-leave")) ||
                 eventName.equals(paramList.get("name-occupied")) ||
-                eventName.equals(paramList.get("name-absent"))){
-            return true;
-        }
-        return false;
+                eventName.equals(paramList.get("name-absent"));
     }
-
-
 
     @Override
     public Event test(InputChangeEvent ie, boolean override) throws PhidgetException {

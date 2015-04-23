@@ -1,13 +1,9 @@
 package com.jackgerrits.events;
 
-import com.jackgerrits.Options;
 import com.jackgerrits.Sensor;
-import com.jackgerrits.SensorController;
 import com.phidgets.PhidgetException;
 import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
-
-import java.util.NoSuchElementException;
 
 /**
  * Created by Jack on 28/03/2015.
@@ -74,14 +70,12 @@ public class ThresholdEventRule extends EventRule {
 
     public Event test(String subname) throws PhidgetException {
         if(subname.equals(name_gt)){
-            int currentValue = sensorController.getVal(sensorName);
-            runningAverage = runningAverage*0.6 + currentValue*0.4;
+            updateAverage(sensorController.getVal(sensorName));
             if((runningAverage > threshold)){
                 return new Event(name_gt,description_gt, hideFromFeed);
             }
         } else if (subname.equals(name_lt)){
-            int currentValue = sensorController.getVal(sensorName);
-            runningAverage = runningAverage*0.6 + currentValue*0.4;
+            updateAverage(sensorController.getVal(sensorName));
             if((runningAverage < threshold)){
                 return new Event(name_lt,description_lt, hideFromFeed);
             }
@@ -89,13 +83,15 @@ public class ThresholdEventRule extends EventRule {
         return null;
     }
 
+    void updateAverage(int currentValue){
+        runningAverage = runningAverage*0.6 + currentValue*0.4;
+    }
+
+
     @Override
     public boolean isCorrespondingTo(Event event){
         String n = event.getName();
-        if(n.equals(name) || n.equals(name_lt) || n.equals(name_gt)){
-            return true;
-        }
-        return false;
+        return n.equals(name) || n.equals(name_lt) || n.equals(name_gt);
     }
 
     @Override

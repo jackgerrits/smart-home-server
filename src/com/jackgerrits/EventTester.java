@@ -31,6 +31,7 @@ public class EventTester {
         andRules = rc.getAndEventRules();
     }
 
+    //when an event is passed in to be evaluated then it is being test for AND events
     public ArrayList<Event> evalEvent(Event event) {
         ArrayList<Event> outcomes = new ArrayList<>();
         for (AndEventRule rule : andRules){
@@ -47,44 +48,28 @@ public class EventTester {
         return outcomes;
     }
 
-    public ArrayList<Event> evalEvent(SensorChangeEvent se) {
+    public ArrayList<Event> evalEvent(Object changeEvent) {
         ArrayList<Event> outcomes = new ArrayList<>();
         if (rules != null){
             for(EventRule rule : rules) {
 
                 Event result = null;
                 try {
-                    result = rule.test(se, false);
+                    if(changeEvent instanceof SensorChangeEvent){
+                        result = rule.test((SensorChangeEvent)changeEvent, false);
+                    } else if (changeEvent instanceof InputChangeEvent){
+                        result = rule.test((InputChangeEvent)changeEvent, false);
+                    }
                 } catch (PhidgetException e) {
                     e.printStackTrace();
                 }
 
                 if(result != null){
-                    //System.out.println("Adding Event " + result.getName());
                     outcomes.add(result);
                 }
             }
         }
         return outcomes;
     }
-    public ArrayList<Event> evalEvent(InputChangeEvent ie) {
-        ArrayList<Event> outcomes = new ArrayList<>();
-        if (rules != null){
-            for(EventRule rule : rules) {
-                Event result = null;
-                try {
-                    result = rule.test(ie, false);
-                } catch (PhidgetException e) {
-                    e.printStackTrace();
-                }
 
-                // System.out.println("[SENSOR ERROR] No such sensor at: [DIGITAL port: " + ie.getIndex() + ", value: " + ie.getState());
-                if(result != null){
-                    //System.out.println("Adding Event " + result.getName());
-                    outcomes.add(result);
-                }
-            }
-        }
-        return outcomes;
-    }
 }

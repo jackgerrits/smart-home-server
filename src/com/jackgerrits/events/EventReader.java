@@ -10,7 +10,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Jack on 28/03/2015.
@@ -29,8 +28,8 @@ public class EventReader {
     void processCurrent(JSONObject current){
         if(current.containsKey("type")){
             String type = (String) current.get("type");
-            String name, description, sensor = null;
-            Integer val = null;
+            String name, description, sensor;
+            Integer val;
             boolean hidden;
             int timeout;
 
@@ -41,7 +40,7 @@ public class EventReader {
             }
 
             if(current.containsKey("timeout")){
-                timeout = new Long((Long)current.get("timeout") ).intValue();
+                timeout = ((Long)current.get("timeout")).intValue();
             } else {
                 timeout = ops.getDefaultTimeout();
             }
@@ -67,7 +66,7 @@ public class EventReader {
                 case "equal":
                     description = (String) current.get("description");
                     sensor = (String) current.get("sensor");
-                    val = new Long((Long) current.get("value")).intValue();
+                    val = ((Long) current.get("value")).intValue();
 
 
                     if(name == null || description == null || sensor == null || val == -1){
@@ -84,7 +83,7 @@ public class EventReader {
                     String description_lt = (String) current.get("description_lt");
                     String description_gt = (String) current.get("description_gt");
                     sensor = (String) current.get("sensor");
-                    val = new Long((Long) current.get("value")).intValue();
+                    val = ((Long) current.get("value")).intValue();
 
                     if(name == null || name_lt == null || name_gt == null || description_lt == null || description_gt == null ||  val == -1){
                         System.out.println("JSON ERROR: Missing field. Required fields for threshold: [type, name, name_lt, name_gt, description_lt, description_gt, sensor, value]");
