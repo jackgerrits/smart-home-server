@@ -7,8 +7,7 @@ import com.phidgets.event.InputChangeListener;
 import com.phidgets.event.SensorChangeEvent;
 import com.phidgets.event.SensorChangeListener;
 
-import java.util.ArrayList;
-import java.util.NoSuchElementException;
+import java.util.ArrayList  ;
 
 /**
  * Created by Jack on 23/04/2015.
@@ -28,7 +27,7 @@ public class Phidget {
 
         ik = new InterfaceKitPhidget();
         ik.openAny();
-        System.out.println("Attempting to connect to Phidget... [ "+ ip + ", "+ port + " ]");
+        System.out.println("Attempting to connect to Phidget... [ USB ]");
         ik.waitForAttachment();
         attachListeners();
         System.out.println("Successfully connected to Phidget!");
@@ -41,7 +40,7 @@ public class Phidget {
 
         ik = new InterfaceKitPhidget();
         ik.open(serial);
-        System.out.println("Attempting to connect to Phidget... [ "+ ip + ", "+ port + " ]");
+        System.out.println("Attempting to connect to Phidget... [ USB: "+ serial+" ]");
         ik.waitForAttachment();
         attachListeners();
         System.out.println("Successfully connected to Phidget!");
@@ -56,7 +55,7 @@ public class Phidget {
 
         ik = new InterfaceKitPhidget();
         ik.open(serial, ip, port);
-        System.out.println("Attempting to connect to Phidget... [ "+ ip + ", "+ port + " ]");
+        System.out.println("Attempting to connect to Phidget... [ NETWORK: "+ ip + ", "+ port + ", "+serial+" ]");
         ik.waitForAttachment();
         attachListeners();
         System.out.println("Successfully connected to Phidget!");
@@ -70,7 +69,7 @@ public class Phidget {
 
         ik = new InterfaceKitPhidget();
         ik.openAny(ip, port);
-        System.out.println("Attempting to connect to Phidget... [ "+ ip + ", "+ port + " ]");
+        System.out.println("Attempting to connect to Phidget... [ NETWORK: "+ ip + ", "+ port + " ]");
         ik.waitForAttachment();
         attachListeners();
 

@@ -44,7 +44,7 @@ public class SensorHandler implements HttpHandler {
             OutputStream os = t.getResponseBody();
             os.write(obj.toString().getBytes());
             os.close();
-        } else if ((path.length() > 13) && (Arrays.asList(connectedSensors).contains(path.substring(14)))){
+        } else if ((path.length() > 13) && (connectedSensors).contains(path.substring(14))){
             String sensorName = path.substring(14);
             System.out.println("[Sensors] Serving: /data/sensors/"+ sensorName);
             JSONObject obj = new JSONObject();
@@ -54,13 +54,6 @@ public class SensorHandler implements HttpHandler {
             } catch (PhidgetException e){
                 System.out.println(e.getErrorNumber());
                 System.out.println(e.getDescription());
-                /* TODO determine cause of Phidget exception
-                    -determine if no sensor being plugged into analog port throws an error and what error code
-                        CANNOT TELL IF THERE IS NO SENSOR
-                        JUST RETURNS ZERO
-                    -handle error if connection to Phidget is lost (Network lost)
-
-                 */
             }
 
             OutputStream os = t.getResponseBody();

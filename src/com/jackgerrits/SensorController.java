@@ -49,6 +49,7 @@ public class SensorController {
         System.out.println("Event definitions loaded successfully!");
 
         addPhidgets( ops.getPhidgets());
+        checkSensorNamesUnqiue();
     }
 
     void processChangeEvent(SensorChangeEvent se){
@@ -56,6 +57,21 @@ public class SensorController {
             addEvents(eventTester.evalEvent(se));
         } catch (PhidgetException e) {
             e.printStackTrace();
+        }
+    }
+
+    void checkSensorNamesUnqiue(){
+        ArrayList<String> sensors = getConnectedSensors();
+        for(String s : sensors){
+            for(String current : sensors ){
+                if(s == current){
+                    continue;
+                }
+                if(s.equals(current)){
+                    System.out.println("OPTIONS ERROR: Sensor names must be unique - not unique: '"+ s+"'");
+                    System.exit(1);
+                }
+            }
         }
     }
 
