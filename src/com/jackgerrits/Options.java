@@ -46,14 +46,14 @@ public class Options {
 
         //get connected analog sensors
         for(int i =0; i < 8; i++){
-            if(!properties.getProperty("analog"+i).equals("")){
+            if(properties.getProperty("analog"+i)!=null){
                 sensors.add(new Sensor(properties.getProperty("analog"+i), i, Sensor.sensorType.ANALOG));
             }
         }
 
         //get digital sensors
         for(int i =0; i < 8; i++){
-            if(!properties.getProperty("digital"+i).equals("")){
+            if(properties.getProperty("digital"+i)!=null){
                 sensors.add(new Sensor(properties.getProperty("digital"+i), i, Sensor.sensorType.DIGITAL));
             }
         }
