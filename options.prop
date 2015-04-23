@@ -1,4 +1,6 @@
-#Application/webserver server port
+#----------GENERAL SETTINGS----------
+
+Application/webserver server port
 server-port=7777
 
 username=admin
@@ -7,20 +9,32 @@ password=cheese
 ssl-password=password
 ssl-keystore=keystore.jks
 
+
+#----------PHIDGET SETTINGS----------
+
 #options for phidget
-phidget-ip=192.168.0.21
-phidget-port=5001
+number-of-phidgets=1
+
+#---PHIDGET 0---
+0-phidget-type=network
+0-phidget-ip=192.168.0.21
+0-phidget-port=5001
+
+#Phidget 0 sensors
+0-analog2=motion
+0-analog4=motion
+0-analog3=light
+0-analog6=touch
+0-digital5=magSwitch
+
+#---PHIDGET 1---
+
+#can define serial for connecting to phidgets also
+#1-phidget-serial=1234
+1-phidget-type=usb
+
+1-analog0=irdistance
+
 
 #event timeout in ms
-event-timeout=2000
-
-#CONNECTED SENSORS
-#add a name to corresponding sensor port if sensor is connected.
-#otherwise leave blank - IMPORTANT
-
-
-analog2=motion
-analog3=light
-analog6=touch
-
-digital5=magSwitch
+default-event-timeout=2000

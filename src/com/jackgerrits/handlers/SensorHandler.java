@@ -10,7 +10,9 @@ import org.json.simple.JSONObject;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 
 /**
@@ -18,12 +20,11 @@ import java.util.Collections;
  */
 public class SensorHandler implements HttpHandler {
     SensorController sensorController;
-    String[] connectedSensors;
+    ArrayList<String> connectedSensors;
 
     public SensorHandler(){
         sensorController = SensorController.get();
         connectedSensors = sensorController.getConnectedSensors();
-
     }
 
     @Override
