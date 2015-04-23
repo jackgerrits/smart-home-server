@@ -167,7 +167,7 @@ public class Options {
         }
     }
 
-    public int getEventTimeout(){
+    public int getDefaultTimeout(){
         if(isPropertyValid("default-event-timeout")) {
             return Integer.parseInt(properties.getProperty("default-event-timeout"));
         } else {

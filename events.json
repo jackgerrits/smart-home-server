@@ -4,7 +4,8 @@
       "type": "change",
       "name": "door",
       "description": "Door opened/closed",
-      "sensor": "magSwitch"
+      "sensor": "magSwitch",
+      "timeout": 400
     },
     {
       "type": "change",
@@ -51,6 +52,21 @@
       "event1": "alarm",
       "event2": "lightStatus",
       "event2-subname": "lightOn"
+    },
+    {
+      "type": "entityDetection",
+      "name": "entityDetection",
+      "name_enter": "enter",
+      "name_leave": "leave",
+      "name_occupied": "occupied",
+      "name_absent": "absent",
+      "description_leave": "Someone has left the room.",
+      "description_enter": "Someone has entered the room.",
+      "description_occupied": "The room is occupied.",
+      "description_absent": "The room is empty.",
+      "ir-sensor": "irdistance",
+      "motion-sensor": "motion",
+      "timeout": 2000
     }
   ]
 }

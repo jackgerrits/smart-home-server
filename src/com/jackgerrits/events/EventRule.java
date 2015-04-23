@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
  */
 public abstract class EventRule {
     public enum type {
-        EQUAL, CHANGE, THRESHOLD, AND, OR, BUNDLE
+        EQUAL, CHANGE, THRESHOLD, AND, OR, BUNDLE, ENTITY_DETECTION
     }
 
     String name;
@@ -23,14 +23,15 @@ public abstract class EventRule {
     long lastReturn;
     boolean hideFromFeed;
 
-    public EventRule(String name, boolean hideFromFeed){
+    public EventRule(String name, boolean hideFromFeed, int timeout){
         this.name = name;
         ops = Options.get();
-        if(ops!=null){
-            timeout = ops.getEventTimeout();
-        } else {
-            timeout = 1000;
+
+        this.timeout = timeout;
+        if(timeout == -1){
+            this.timeout = ops.getDefaultTimeout();
         }
+
         lastReturn = System.currentTimeMillis();
         this.hideFromFeed = hideFromFeed;
         this.sensorController = SensorController.get();

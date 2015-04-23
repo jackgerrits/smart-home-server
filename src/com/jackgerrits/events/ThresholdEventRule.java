@@ -27,8 +27,8 @@ public class ThresholdEventRule extends EventRule {
         INIT, LT, GT
     }
 
-    public ThresholdEventRule(String name, String name_lt, String name_gt, String d_lt, String d_gt, String sensorName, int val, boolean hideFromFeed){
-        super(name, hideFromFeed);
+    public ThresholdEventRule(String name, String name_lt, String name_gt, String d_lt, String d_gt, String sensorName, int val, boolean hideFromFeed, int timeout){
+        super(name, hideFromFeed, timeout);
         this.name_lt = name_lt;
         this.name_gt = name_gt;
         this.description_lt = d_lt;

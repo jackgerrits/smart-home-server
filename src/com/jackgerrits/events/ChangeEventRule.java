@@ -15,8 +15,8 @@ public class ChangeEventRule extends EventRule {
     private String description;
     private String sensorName;
 
-    public ChangeEventRule(String name, String description, String sensorName, boolean hideFromFeed){
-        super(name, hideFromFeed);
+    public ChangeEventRule(String name, String description, String sensorName, boolean hideFromFeed, int timeout){
+        super(name, hideFromFeed, timeout);
         this.description = description;
         this.sensorName = sensorName;
     }

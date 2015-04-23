@@ -38,6 +38,17 @@ public class SensorController {
         phidgets.addAll(inPhidgets);
     }
 
+    //returns the phidget that holds the queried sensor
+    public Phidget getPhidget(String sensorName){
+        Sensor sensor = getSensor(sensorName);
+        for(Phidget p : phidgets){
+            if(p.getConnectedSensors().contains(sensor.getName())){
+                return  p;
+            }
+        }
+        return null;
+    }
+
     public SensorController(){
         self = this;
         ops = Options.get();
@@ -142,7 +153,7 @@ public class SensorController {
         return events.remove();
     }
 
-    void addEvent(Event in) throws PhidgetException {
+    public void addEvent(Event in) throws PhidgetException {
         //EventRules now handle issue of rapid firing
 
         addEvents(eventTester.evalEvent(in));
@@ -151,7 +162,7 @@ public class SensorController {
         }
     }
 
-    void addEvents(ArrayList<Event> events) throws PhidgetException {
+    public void addEvents(ArrayList<Event> events) throws PhidgetException {
         if(!events.isEmpty()) {
             for (Event event : events) {
                 addEvent(event);
@@ -160,8 +171,6 @@ public class SensorController {
     }
 
     public void stop(){
-        for(Phidget p : phidgets){
-            p.stop();
-        }
+        phidgets.forEach(com.jackgerrits.Phidget::stop);
     }
 }

@@ -92,6 +92,16 @@ public class Phidget {
         });
     }
 
+    public void attachListener(SensorChangeListener scl){
+        ik.addSensorChangeListener(scl);
+    }
+
+    public void removeListener(SensorChangeListener scl){
+        ik.removeSensorChangeListener(scl);
+    }
+
+
+
     public ArrayList<String> getConnectedSensors(){
         ArrayList<String> res = new ArrayList<>();
         for (int i = 0; i < sensors.size(); i++) {

@@ -29,20 +29,17 @@ public class EventTester {
 
         rules = rc.getEventRules();
         andRules = rc.getAndEventRules();
-
-//        rules = new ArrayList<>();
-//        rules.add(new EqualEventRule("doorOpened", "Door opened.", "magSwitch", 0, sensorController,ops));
-//        rules.add(new EqualEventRule("doorClosed", "Door closed.", "magSwitch", 1, sensorController, ops));
-//        rules.add(new ChangeEventRule("touch", "Touch sensor touched.", "touch", sensorController, ops));
-//        rules.add(new AndEventRule("alarm", "door open and sensor touched", rules.get(2), rules.get(0), sensorController, ops));
-//        rules.add(new ThresholdEventRule("name", "lightOff", "lightOn", "Room is dark.", "Room is bright.", "light", 30, sensorController, ops));
-
     }
 
-    public ArrayList<Event> evalEvent(Event event) throws PhidgetException{
+    public ArrayList<Event> evalEvent(Event event) {
         ArrayList<Event> outcomes = new ArrayList<>();
         for (AndEventRule rule : andRules){
-            Event result = rule.test(event);
+            Event result = null;
+            try {
+                result = rule.test(event);
+            } catch (PhidgetException e) {
+                e.printStackTrace();
+            }
             if(result!=null){
                 outcomes.add(result);
             }
@@ -50,11 +47,17 @@ public class EventTester {
         return outcomes;
     }
 
-    public ArrayList<Event> evalEvent(SensorChangeEvent se)  throws PhidgetException {
+    public ArrayList<Event> evalEvent(SensorChangeEvent se) {
         ArrayList<Event> outcomes = new ArrayList<>();
         if (rules != null){
             for(EventRule rule : rules) {
-                Event result = rule.test(se, false);
+
+                Event result = null;
+                try {
+                    result = rule.test(se, false);
+                } catch (PhidgetException e) {
+                    e.printStackTrace();
+                }
 
                 if(result != null){
                     System.out.println("Adding Event " + result.getName());
@@ -64,11 +67,16 @@ public class EventTester {
         }
         return outcomes;
     }
-    public ArrayList<Event> evalEvent(InputChangeEvent ie) throws PhidgetException {
+    public ArrayList<Event> evalEvent(InputChangeEvent ie) {
         ArrayList<Event> outcomes = new ArrayList<>();
         if (rules != null){
             for(EventRule rule : rules) {
-                Event result = rule.test(ie, false);
+                Event result = null;
+                try {
+                    result = rule.test(ie, false);
+                } catch (PhidgetException e) {
+                    e.printStackTrace();
+                }
 
                 // System.out.println("[SENSOR ERROR] No such sensor at: [DIGITAL port: " + ie.getIndex() + ", value: " + ie.getState());
                 if(result != null){
