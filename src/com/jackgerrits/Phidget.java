@@ -100,6 +100,14 @@ public class Phidget {
         ik.removeSensorChangeListener(scl);
     }
 
+    public void attachListener(InputChangeListener icl){
+        ik.addInputChangeListener(icl);
+    }
+
+    public void removeListener(InputChangeListener icl){
+        ik.removeInputChangeListener(icl);
+    }
+
 
 
     public ArrayList<String> getConnectedSensors(){

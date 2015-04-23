@@ -38,7 +38,11 @@ public abstract class EventRule {
     }
 
     public boolean isCorrespondingTo(Event event){
-        if(event.getName().equals(name)){
+        return isCorrespondingTo(event.getName());
+    }
+
+    public boolean isCorrespondingTo(String eventName){
+        if(eventName.equals(name)){
             return true;
         }
         return false;

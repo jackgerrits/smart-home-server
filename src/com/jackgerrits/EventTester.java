@@ -60,7 +60,7 @@ public class EventTester {
                 }
 
                 if(result != null){
-                    System.out.println("Adding Event " + result.getName());
+                    //System.out.println("Adding Event " + result.getName());
                     outcomes.add(result);
                 }
             }
@@ -80,7 +80,7 @@ public class EventTester {
 
                 // System.out.println("[SENSOR ERROR] No such sensor at: [DIGITAL port: " + ie.getIndex() + ", value: " + ie.getState());
                 if(result != null){
-                    System.out.println("Adding Event " + result.getName());
+                    //System.out.println("Adding Event " + result.getName());
                     outcomes.add(result);
                 }
             }

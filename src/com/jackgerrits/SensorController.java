@@ -64,11 +64,7 @@ public class SensorController {
     }
 
     void processChangeEvent(SensorChangeEvent se){
-        try {
-            addEvents(eventTester.evalEvent(se));
-        } catch (PhidgetException e) {
-            e.printStackTrace();
-        }
+        addEvents(eventTester.evalEvent(se));
     }
 
     void checkSensorNamesUnqiue(){
@@ -87,11 +83,7 @@ public class SensorController {
     }
 
     void processChangeEvent(InputChangeEvent ie){
-        try {
-            addEvents(eventTester.evalEvent(ie));
-        } catch (PhidgetException e) {
-            e.printStackTrace();
-        }
+        addEvents(eventTester.evalEvent(ie));
     }
 
 
@@ -153,7 +145,7 @@ public class SensorController {
         return events.remove();
     }
 
-    public void addEvent(Event in) throws PhidgetException {
+    public synchronized void addEvent(Event in) {
         //EventRules now handle issue of rapid firing
 
         addEvents(eventTester.evalEvent(in));
@@ -162,7 +154,7 @@ public class SensorController {
         }
     }
 
-    public void addEvents(ArrayList<Event> events) throws PhidgetException {
+    public void addEvents(ArrayList<Event> events)  {
         if(!events.isEmpty()) {
             for (Event event : events) {
                 addEvent(event);

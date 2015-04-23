@@ -56,17 +56,41 @@
     {
       "type": "entityDetection",
       "name": "entityDetection",
-      "name_enter": "enter",
-      "name_leave": "leave",
-      "name_occupied": "occupied",
-      "name_absent": "absent",
-      "description_leave": "Someone has left the room.",
-      "description_enter": "Someone has entered the room.",
-      "description_occupied": "The room is occupied.",
-      "description_absent": "The room is empty.",
+      "name-enter": "enter",
+      "name-leave": "leave",
+      "name-occupied": "occupied",
+      "name-absent": "absent",
+      "description-leave": "Someone has left the room.",
+      "description-enter": "Someone has entered the room.",
+      "description-occupied": "The room is occupied.",
+      "description-absent": "The room is empty.",
       "ir-sensor": "irdistance",
       "motion-sensor": "motion",
+      "door-sensor": "magSwitch",
       "timeout": 2000
+    },
+    {
+      "type": "and",
+      "name": "lightperson",
+      "description": "Lights on and person present",
+      "event1": "enter",
+      "event2": "lightStatus",
+      "event2-subname": "lightOn"
+    },
+    {
+      "type": "and",
+      "name": "doorperson",
+      "description": "door closed and person in room",
+      "event1": "doorClosed",
+      "event2": "occupied"
+    },
+    {
+      "type": "and",
+      "name": "tocuhdoorperson",
+      "description": "sensor touched with person present and door clsoed",
+      "event1": "sensorTouch",
+      "event2": "doorperson"
     }
+
   ]
 }

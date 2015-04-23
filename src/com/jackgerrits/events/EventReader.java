@@ -140,16 +140,17 @@ public class EventReader {
                     HashMap<String,String> paramsList = new HashMap<>();
 
                     paramsList.put("name", (String)current.get("name"));
-                    paramsList.put("name_enter", (String)current.get("name_enter"));
-                    paramsList.put("name_leave", (String)current.get("name_leave"));
-                    paramsList.put("name_occupied", (String)current.get("name_occupied"));
-                    paramsList.put("name_absent", (String)current.get("name_absent"));
-                    paramsList.put("description_leave", (String)current.get("description_leave"));
-                    paramsList.put("description_enter", (String)current.get("description_enter"));
-                    paramsList.put("description_occupied", (String)current.get("description_occupied"));
-                    paramsList.put("description_absent", (String)current.get("description_absent"));
+                    paramsList.put("name-enter", (String)current.get("name-enter"));
+                    paramsList.put("name-leave", (String)current.get("name-leave"));
+                    paramsList.put("name-occupied", (String)current.get("name-occupied"));
+                    paramsList.put("name-absent", (String)current.get("name-absent"));
+                    paramsList.put("description-leave", (String)current.get("description-leave"));
+                    paramsList.put("description-enter", (String)current.get("description-enter"));
+                    paramsList.put("description-occupied", (String)current.get("description-occupied"));
+                    paramsList.put("description-absent", (String)current.get("description-absent"));
                     paramsList.put("ir-sensor", (String)current.get("ir-sensor"));
                     paramsList.put("motion-sensor", (String)current.get("motion-sensor"));
+                    paramsList.put("door-sensor", (String)current.get("door-sensor"));
 
                     if(paramsList.values().contains(null)){
                         System.out.println("JSON ERROR: Missing field in entityDetection");
@@ -216,7 +217,7 @@ public class EventReader {
                 andEventRules.add((AndEventRule)rule);
             } else if(rule.getType() ==  EventRule.type.ENTITY_DETECTION) {
                 et = (EntityDetectionEventRule)rule;
-                eventRules.add(rule);
+                eventRules.add(0,rule);
             } else {
                 eventRules.add(rule);
             }
@@ -232,14 +233,20 @@ public class EventReader {
 
         public EventRule getEventRule(String name){
             for(EventRule rule : eventRules){
-                if(rule.getName().equals(name)){
+                if(rule.isCorrespondingTo(name)){
                     return rule;
                 }
             }
 
             for(EventRule rule : andEventRules){
-                if(rule.getName().equals(name)){
+                if(rule.isCorrespondingTo(name)){
                     return rule;
+                }
+            }
+
+            if(et!=null){
+                if(et.isCorrespondingTo(name)){
+                    return et;
                 }
             }
             return null;
