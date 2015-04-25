@@ -52,14 +52,14 @@ public class SensorController {
         self = this;
         ops = Options.get();
         phidgets = new ArrayList<>();
+        addPhidgets( ops.getPhidgets());
+        checkSensorNamesUnqiue();
         events = new LinkedList<>();
         System.out.println("Loading event definitions...");
         eventTester = new EventTester();
         eventTester.loadEvents("events.json");
         System.out.println("Event definitions loaded successfully!");
 
-        addPhidgets( ops.getPhidgets());
-        checkSensorNamesUnqiue();
     }
 
     void processChangeEvent(SensorChangeEvent se){

@@ -147,14 +147,21 @@ public class EventReader {
                     paramsList.put("description-enter", (String)current.get("description-enter"));
                     paramsList.put("description-occupied", (String)current.get("description-occupied"));
                     paramsList.put("description-absent", (String)current.get("description-absent"));
-                    paramsList.put("ir-sensor", (String)current.get("ir-sensor"));
                     paramsList.put("motion-sensor", (String)current.get("motion-sensor"));
-                    paramsList.put("door-sensor", (String)current.get("door-sensor"));
 
                     if(paramsList.values().contains(null)){
                         System.out.println("JSON ERROR: Missing field in entityDetection");
                         System.exit(1);
                     }
+
+                    paramsList.put("ir-sensor", (String)current.get("ir-sensor"));
+                    paramsList.put("door-sensor", (String)current.get("door-sensor"));
+
+                    if(paramsList.get("ir-sensor") == null && paramsList.get("door-sensor") == null){
+                        System.out.println("JSON ERROR: Must have at least one of ir-sensor or door-sensor defined for entityDetection eventRule");
+                        System.exit(1);
+                    }
+
                     container.add(new EntityDetectionEventRule(paramsList, hidden, timeout));
                     break;
                 default:

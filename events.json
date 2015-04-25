@@ -5,7 +5,8 @@
       "name": "door",
       "description": "Door opened/closed",
       "sensor": "magSwitch",
-      "timeout": 400
+      "timeout": 400,
+      "hide-from-feed": true
     },
     {
       "type": "change",
@@ -86,8 +87,8 @@
     },
     {
       "type": "and",
-      "name": "tocuhdoorperson",
-      "description": "sensor touched with person present and door clsoed",
+      "name": "touchdoorperson",
+      "description": "sensor touched with person present and door closed",
       "event1": "sensorTouch",
       "event2": "doorperson"
     }

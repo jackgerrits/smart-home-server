@@ -34,6 +34,5 @@ number-of-phidgets=2
 
 1-analog0=irdistance
 
-
 #event timeout in ms
 default-event-timeout=2000

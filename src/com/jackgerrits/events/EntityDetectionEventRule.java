@@ -17,7 +17,7 @@ import java.util.TimerTask;
  */
 public class EntityDetectionEventRule extends EventRule{
 
-    boolean isOccupied = true;
+    boolean isOccupied;
     HashMap<String, String> paramList;
     boolean isHidden;
 
@@ -25,11 +25,47 @@ public class EntityDetectionEventRule extends EventRule{
         super(paramList.get("name"), hideFromFeed, timeout);
         this.paramList = paramList;
         isHidden = hideFromFeed;
+        MotionObserver mo = new MotionObserver();
+        mo.setIsOccupied();
 
-        /*TODO
-        start a timer here which fires every 5 mins or so and checks if there is movement in the room
-        this might be a bad idea though for instance when people are sleeping
-         */
+    }
+
+    @Override
+    public Event test(InputChangeEvent ie, boolean override) throws PhidgetException {
+        Sensor eventSensor = sensorController.getSensor(ie.getIndex(), Sensor.sensorType.DIGITAL);
+        // if door sensor isn't defined hash table returns null, and causes if to be false
+        if(eventSensor.getName().equals(paramList.get("door-sensor"))){
+            if(canFire()){
+                System.out.println("door activity detected, listening for significant motion now");
+                MotionObserver mo = new MotionObserver();
+                mo.startEventListenTimer();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Event test(SensorChangeEvent se, boolean override) throws PhidgetException {
+        Sensor eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG);
+        // if ir sensor isn't defined hash table returns null, and causes if to be false
+        if(eventSensor.getName().equals(paramList.get("ir-sensor"))){
+            if(canFire()){
+                System.out.println("door activity detected, listening for significant motion now");
+                MotionObserver mo = new MotionObserver();
+                mo.startEventListenTimer();
+            }
+        }
+        return null;
+    }
+
+
+    @Override
+    public Event test() throws PhidgetException {
+        if(isOccupied){
+            return new Event(paramList.get("name-occupied"), paramList.get("description-occupied"), isHidden);
+        } else {
+            return new Event(paramList.get("name-absent"), paramList.get("description-absent"), isHidden);
+        }
     }
 
     public String getParam(String key){
@@ -45,36 +81,8 @@ public class EntityDetectionEventRule extends EventRule{
                 eventName.equals(paramList.get("name-absent"));
     }
 
-    @Override
-    public Event test(InputChangeEvent ie, boolean override) throws PhidgetException {
-        /* Currently entity detection only relies on ir sensor to begin the process */
-        return null;
-    }
-
-    @Override
-    public Event test(SensorChangeEvent se, boolean override) throws PhidgetException {
-        Sensor eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG);
-        if(eventSensor.getName().equals(paramList.get("ir-sensor"))){
-            if(canFire()){
-                System.out.println("door activity detected, listening for significant motion now");
-                MotionObserver mo = new MotionObserver();
-                mo.start();
-            }
-        }
-        return null;
-    }
-
     boolean isOccupied(){
         return isOccupied;
-    }
-
-    @Override
-    public Event test() throws PhidgetException {
-        if(isOccupied){
-            return new Event(paramList.get("name-occupied"), paramList.get("description-occupied"), isHidden);
-        } else {
-            return new Event(paramList.get("name-absent"), paramList.get("description-absent"), isHidden);
-        }
     }
 
     @Override
@@ -82,22 +90,25 @@ public class EntityDetectionEventRule extends EventRule{
         return type.ENTITY_DETECTION;
     }
 
+
+    /*
+    Removed Door listener to stop the event because this was just an issue with the physical sensor setup.
+    IR sensor should be positioned such that the door closing does not trigger it
+    Door can actually be used as a trigger for this event
+     */
     public class MotionObserver {
         Phidget motionPhidget;
-        Phidget doorPhidget;
         SensorChangeListener motionChangeListener;
-        InputChangeListener doorChangeListener;
+
+        final int fluctuationThreshold = 2000;
 
         int maxValue = 500;
         int minValue = 500;
         int totalFluctuation = 0;
         int lastValue = 500;
-        boolean doorDetected = false;
-
 
         public MotionObserver(){
             motionPhidget = sensorController.getPhidget(paramList.get("motion-sensor"));
-            doorPhidget = sensorController.getPhidget(paramList.get("door-sensor"));
             if(motionPhidget==null){
                 System.out.println("ERROR: motion sensor phidget could not be retrieved");
                 System.exit(1);
@@ -115,39 +126,57 @@ public class EntityDetectionEventRule extends EventRule{
                     }
                 }
             };
-
-            doorChangeListener = new InputChangeListener() {
-                @Override
-                public void inputChanged(InputChangeEvent inputChangeEvent) {
-                    Sensor eventSensor = sensorController.getSensor(inputChangeEvent.getIndex(), Sensor.sensorType.DIGITAL);
-                    if(eventSensor.getName().equals(paramList.get("door-sensor"))){
-                        System.out.println("The door has been detected");
-                       doorDetected = true;
-                    }
-                }
-            };
         }
 
-        public void start(){
+        public void setIsOccupied(){
             motionPhidget.attachListener(motionChangeListener);
-            doorPhidget.attachListener(doorChangeListener);
+            resetValues();
 
             Timer t = new Timer();
             t.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     System.out.println("timer finished: max: " + maxValue + " min: " + minValue + " fluc:  " + totalFluctuation);
-                    if(totalFluctuation>2000 && !isOccupied  && !doorDetected){
+                    if(totalFluctuation>fluctuationThreshold ){
+                        System.out.println("Setting initial to occupied");
+                        isOccupied = true;
+                    } else if(isOccupied){
+                        System.out.println("Setting initial to empty");
+                        isOccupied = false;
+                    }
+                    motionPhidget.removeListener(motionChangeListener);
+                }
+            }, 5000);
+        }
+
+
+
+        public void startEventListenTimer(){
+            motionPhidget.attachListener(motionChangeListener);
+            resetValues();
+
+            Timer t = new Timer();
+            t.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    System.out.println("timer finished: max: " + maxValue + " min: " + minValue + " fluc:  " + totalFluctuation);
+                    if(totalFluctuation>fluctuationThreshold && !isOccupied ){
                         isOccupied = true;
                         sensorController.addEvent(new Event(paramList.get("name-enter"), paramList.get("description-enter"), isHidden));
-                    } else if(isOccupied && !doorDetected){
+                    } else if(totalFluctuation<fluctuationThreshold && isOccupied){
                         isOccupied = false;
                         sensorController.addEvent(new Event(paramList.get("name-leave"), paramList.get("description-leave"), isHidden));
                     }
                     motionPhidget.removeListener(motionChangeListener);
-                    doorPhidget.removeListener(doorChangeListener);
                 }
             }, 5000);
+        }
+
+        private void resetValues(){
+            maxValue = 500;
+            minValue = 500;
+            totalFluctuation = 0;
+            lastValue = 500;
         }
     }
 }
