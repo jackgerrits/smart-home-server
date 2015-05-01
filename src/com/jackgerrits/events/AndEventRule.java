@@ -16,7 +16,7 @@ public class AndEventRule extends EventRule {
     /*
      * AND event works for CHANGE, EQUAL, THRESHOLD
      * For testing whether event causes threshold to trip, standard threshold events can be added.
-     * To test whether state is in either of two threshold states, ThreshBundleEventRule must be passed containing the Threshold event and sub event name
+     * To testEvent whether state is in either of two threshold states, ThreshBundleEventRule must be passed containing the Threshold event and sub event name
      */
 
     public AndEventRule(String name, String description, EventRule r1, EventRule r2, boolean hideFromFeed, int timeout){
@@ -29,17 +29,17 @@ public class AndEventRule extends EventRule {
 
     /*redundant code*/
     @Override
-    public Event test(InputChangeEvent ie, boolean override) throws PhidgetException {
+    public Event testEvent(InputChangeEvent ie, boolean override) throws PhidgetException {
         /*
-        Event res1 = rule1.test(ie, true);
-        Event res2 = rule2.test(ie, true);
+        Event res1 = rule1.testEvent(ie, true);
+        Event res2 = rule2.testEvent(ie, true);
 
-        if(res1 != null && (rule2.test() != null) ){
+        if(res1 != null && (rule2.testEvent() != null) ){
             if(canFire() || override){
                 return new Event(name, description, hideFromFeed);
             }
         }
-        if ((res2 != null) && (rule1.test() != null)){
+        if ((res2 != null) && (rule1.testEvent() != null)){
             if(canFire() || override){
                 return new Event(name, description, hideFromFeed);
             }
@@ -54,15 +54,15 @@ public class AndEventRule extends EventRule {
         return null;
     }
 
-    public Event test(Event event) throws PhidgetException {
+    public Event testEvent(Event event) throws PhidgetException {
         if(rule1.isCorrespondingTo(event)){
-            if(rule2.test()!=null){
+            if(rule2.testEvent()!=null){
                 return new Event(name, description, hideFromFeed);
             }
         }
 
         if(rule2.isCorrespondingTo(event)){
-            if(rule1.test() != null){
+            if(rule1.testEvent() != null){
                 return new Event(name, description, hideFromFeed);
             }
         }
@@ -71,17 +71,17 @@ public class AndEventRule extends EventRule {
 
     /*redundant code*/
     @Override
-    public Event test(SensorChangeEvent se, boolean override) throws PhidgetException {
+    public Event testEvent(SensorChangeEvent se, boolean override) throws PhidgetException {
         /*
-        Event res1 = rule1.test(se, true);
-        Event res2 = rule2.test(se, true);
+        Event res1 = rule1.testEvent(se, true);
+        Event res2 = rule2.testEvent(se, true);
 
-        if((res1 != null) && (rule2.test() != null) ){
+        if((res1 != null) && (rule2.testEvent() != null) ){
             if(override || canFire() ){
                 return new Event(name, description, hideFromFeed);
             }
         }
-        if ((res2 != null) && (rule1.test() != null)){
+        if ((res2 != null) && (rule1.testEvent() != null)){
             if(override || canFire()){
                 return new Event(name, description, hideFromFeed);
             }
@@ -98,8 +98,8 @@ public class AndEventRule extends EventRule {
     }
 
     @Override
-    public Event test() throws PhidgetException {
-        if((rule1.test() != null) && (rule2.test() != null)){
+    public Event testEvent() throws PhidgetException {
+        if((rule1.testEvent() != null) && (rule2.testEvent() != null)){
             return new Event(name, description, hideFromFeed);
         }
         return null;

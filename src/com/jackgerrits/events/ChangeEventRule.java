@@ -20,7 +20,7 @@ public class ChangeEventRule extends EventRule {
     }
 
     @Override
-    public Event test(InputChangeEvent ie, boolean override) throws PhidgetException {
+    public Event testEvent(InputChangeEvent ie, boolean override) throws PhidgetException {
         Sensor eventSensor;
         eventSensor = sensorController.getSensor(ie.getIndex(), Sensor.sensorType.DIGITAL);
 
@@ -33,7 +33,7 @@ public class ChangeEventRule extends EventRule {
     }
 
     @Override
-    public Event test(SensorChangeEvent se, boolean override) throws PhidgetException {
+    public Event testEvent(SensorChangeEvent se, boolean override) throws PhidgetException {
         Sensor eventSensor;
         eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG);
 
@@ -46,7 +46,7 @@ public class ChangeEventRule extends EventRule {
     }
 
     @Override
-    public Event test() throws PhidgetException {
+    public Event testEvent() throws PhidgetException {
         return null;
     }
 

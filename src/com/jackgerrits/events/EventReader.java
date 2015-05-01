@@ -114,7 +114,7 @@ public class EventReader {
                             if(subName1 != null){
                                 r1 = new ThreshBundleEventRule((ThresholdEventRule)r1, subName1);
                             }
-                            //System.out.println("JSON ERROR: Missing field. Threshold event in AND rule requires \"event#-subame\" to define threshold state to test.");
+                            //System.out.println("JSON ERROR: Missing field. Threshold event in AND rule requires \"event#-subame\" to define threshold state to testEvent.");
 
                         }
 
@@ -123,7 +123,7 @@ public class EventReader {
                             if(subName2 != null){
                                 r2 = new ThreshBundleEventRule((ThresholdEventRule)r2, subName2);
                             }
-                            //System.out.println("JSON ERROR: Missing field. Threshold event in AND rule requires \"event#-subame\" to define threshold state to test.");
+                            //System.out.println("JSON ERROR: Missing field. Threshold event in AND rule requires \"event#-subame\" to define threshold state to testEvent.");
                         }
 
                         container.add(new AndEventRule(name, description, r1, r2, hidden, timeout));

@@ -46,11 +46,11 @@ public class ThresholdEventRule extends EventRule {
     }
 
     //this rule does not make sense for a digital input, no point testing
-    public Event test(InputChangeEvent se, boolean override) {
+    public Event testEvent(InputChangeEvent se, boolean override) {
         return null;
     }
 
-    public Event test(SensorChangeEvent se, boolean override) throws PhidgetException {
+    public Event testEvent(SensorChangeEvent se, boolean override) throws PhidgetException {
         Sensor eventSensor;
         eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG);
 
@@ -72,7 +72,7 @@ public class ThresholdEventRule extends EventRule {
     }
 
     @Override
-    public Event test() throws PhidgetException {
+    public Event testEvent() throws PhidgetException {
         return null;
     }
 

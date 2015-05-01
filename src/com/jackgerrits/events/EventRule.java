@@ -56,9 +56,9 @@ public abstract class EventRule {
         return name;
     }
 
-    public abstract Event test(InputChangeEvent ie, boolean override) throws PhidgetException ;
-    public abstract Event test(SensorChangeEvent se, boolean override) throws PhidgetException;
-    public abstract Event test() throws PhidgetException;
+    public abstract Event testEvent(InputChangeEvent ie, boolean override) throws PhidgetException ;
+    public abstract Event testEvent(SensorChangeEvent se, boolean override) throws PhidgetException;
+    public abstract Event testEvent() throws PhidgetException;
     public abstract type getType();
 
 

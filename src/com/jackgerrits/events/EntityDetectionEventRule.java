@@ -31,7 +31,7 @@ public class EntityDetectionEventRule extends EventRule{
     }
 
     @Override
-    public Event test(InputChangeEvent ie, boolean override) throws PhidgetException {
+    public Event testEvent(InputChangeEvent ie, boolean override) throws PhidgetException {
         Sensor eventSensor = sensorController.getSensor(ie.getIndex(), Sensor.sensorType.DIGITAL);
         // if door sensor isn't defined hash table returns null, and causes if to be false
         if(eventSensor.getName().equals(paramList.get("door-sensor"))){
@@ -45,7 +45,7 @@ public class EntityDetectionEventRule extends EventRule{
     }
 
     @Override
-    public Event test(SensorChangeEvent se, boolean override) throws PhidgetException {
+    public Event testEvent(SensorChangeEvent se, boolean override) throws PhidgetException {
         Sensor eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG);
         // if ir sensor isn't defined hash table returns null, and causes if to be false
         if(eventSensor.getName().equals(paramList.get("ir-sensor"))){
@@ -60,7 +60,7 @@ public class EntityDetectionEventRule extends EventRule{
 
 
     @Override
-    public Event test() throws PhidgetException {
+    public Event testEvent() throws PhidgetException {
         if(isOccupied){
             return new Event(paramList.get("name-occupied"), paramList.get("description-occupied"), isHidden);
         } else {

@@ -45,6 +45,7 @@ public class FeedHandler implements HttpHandler {
         obj.put("value", current.getValue());
         obj.put("rawTime", current.getTime());
         obj.put("time", current.getFormattedTime());
+        t.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
         t.sendResponseHeaders(200, obj.toString().length());
         OutputStream os = t.getResponseBody();
         os.write(obj.toString().getBytes());

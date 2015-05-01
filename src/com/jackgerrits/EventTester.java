@@ -31,13 +31,13 @@ public class EventTester {
         andRules = rc.getAndEventRules();
     }
 
-    //when an event is passed in to be evaluated then it is being test for AND events
+    //when an event is passed in to be evaluated then it is being testEvent for AND events
     public ArrayList<Event> evalEvent(Event event) {
         ArrayList<Event> outcomes = new ArrayList<>();
         for (AndEventRule rule : andRules){
             Event result = null;
             try {
-                result = rule.test(event);
+                result = rule.testEvent(event);
             } catch (PhidgetException e) {
                 e.printStackTrace();
             }
@@ -56,9 +56,9 @@ public class EventTester {
                 Event result = null;
                 try {
                     if(changeEvent instanceof SensorChangeEvent){
-                        result = rule.test((SensorChangeEvent)changeEvent, false);
+                        result = rule.testEvent((SensorChangeEvent) changeEvent, false);
                     } else if (changeEvent instanceof InputChangeEvent){
-                        result = rule.test((InputChangeEvent)changeEvent, false);
+                        result = rule.testEvent((InputChangeEvent) changeEvent, false);
                     }
                 } catch (PhidgetException e) {
                     e.printStackTrace();

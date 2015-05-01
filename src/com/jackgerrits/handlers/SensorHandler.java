@@ -38,6 +38,7 @@ public class SensorHandler implements HttpHandler {
 
             obj.put("sensors",sensors);
             System.out.println("[Sensors] Serving: /data/sensors");
+            t.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
             t.sendResponseHeaders(200, obj.toString().length());
             OutputStream os = t.getResponseBody();
             os.write(obj.toString().getBytes());
@@ -59,6 +60,7 @@ public class SensorHandler implements HttpHandler {
             if(value != -1){
                 obj.put("value", value);
                 obj.put("name", sensorName);
+                t.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
                 t.sendResponseHeaders(200, obj.toString().length());
                 os.write(obj.toString().getBytes());
             } else {
@@ -72,6 +74,7 @@ public class SensorHandler implements HttpHandler {
         }
         else {
             String response = "<h1>404 - Not Found</h1>\n";
+            t.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
             t.sendResponseHeaders(404, response.length());
             OutputStream os = t.getResponseBody();
             os.write(response.getBytes());
