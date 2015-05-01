@@ -16,11 +16,10 @@ public class ThresholdEventRule extends EventRule {
     private String description_gt;
     private String sensorName;
     private int threshold;
-    private double runningAverage;
     private state currentState;
 
     private enum state {
-        INIT, LT, GT
+        LT, GT
     }
 
     public ThresholdEventRule(String name, String name_lt, String name_gt, String d_lt, String d_gt, String sensorName, int val, boolean hideFromFeed, int timeout){
@@ -31,8 +30,19 @@ public class ThresholdEventRule extends EventRule {
         this.description_gt = d_gt;
         this.sensorName = sensorName;
         this.threshold = val;
-        this.currentState = state.INIT;
-        runningAverage = 0;
+        this.currentState = getInitialState();
+    }
+
+    state getInitialState(){
+        try{
+            if((sensorController.getVal(sensorName) > threshold)){
+                return state.GT;
+            }
+        } catch (PhidgetException e){
+            System.out.print(e.getDescription());
+
+        }
+        return state.LT;
     }
 
     //this rule does not make sense for a digital input, no point testing
@@ -46,14 +56,12 @@ public class ThresholdEventRule extends EventRule {
 
         if(eventSensor != null && eventSensor.getName().equals(sensorName)){
             int currentValue = sensorController.getVal(eventSensor);
-            //uses running average weighted more heavily on fast to reduce the impact of momentary spikes on output
-            runningAverage = runningAverage*0.6 + currentValue*0.4;
-            if((runningAverage > threshold) && (currentState != state.GT)){
+            if((currentValue > threshold) && (currentState != state.GT)){
                if(override || canFire()){
                     currentState = state.GT;
                     return new Event(name_gt,description_gt, hideFromFeed);
                 }
-            } else if ((runningAverage < threshold) && (currentState != state.LT)){
+            } else if ((currentValue < threshold) && (currentState != state.LT)){
                 if(override || canFire()){
                     currentState = state.LT;
                     return new Event(name_lt,description_lt, hideFromFeed);
@@ -68,25 +76,20 @@ public class ThresholdEventRule extends EventRule {
         return null;
     }
 
+
+
     public Event test(String subname) throws PhidgetException {
         if(subname.equals(name_gt)){
-            updateAverage(sensorController.getVal(sensorName));
-            if((runningAverage > threshold)){
+            if((sensorController.getVal(sensorName) > threshold)){
                 return new Event(name_gt,description_gt, hideFromFeed);
             }
         } else if (subname.equals(name_lt)){
-            updateAverage(sensorController.getVal(sensorName));
-            if((runningAverage < threshold)){
+            if((sensorController.getVal(sensorName) < threshold)){
                 return new Event(name_lt,description_lt, hideFromFeed);
             }
         }
         return null;
     }
-
-    void updateAverage(int currentValue){
-        runningAverage = runningAverage*0.6 + currentValue*0.4;
-    }
-
 
     @Override
     public boolean isCorrespondingTo(Event event){
