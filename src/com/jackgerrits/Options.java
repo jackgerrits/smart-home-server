@@ -24,6 +24,7 @@ public class Options {
     }
 
     public Options(){
+        self = this;
         properties = new Properties();
 
         FileInputStream in = null;
