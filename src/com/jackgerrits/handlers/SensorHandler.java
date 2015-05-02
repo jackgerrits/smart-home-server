@@ -7,11 +7,8 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
@@ -49,6 +46,7 @@ public class SensorHandler implements HttpHandler {
 
                 obj.put("sensors",sensors);
                 System.out.println("[Sensors] Serving: /data/sensors");
+                t.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
                 t.sendResponseHeaders(200, obj.toString().length());
                 OutputStream os = t.getResponseBody();
                 os.write(obj.toString().getBytes());
@@ -70,6 +68,7 @@ public class SensorHandler implements HttpHandler {
                 if(value != -1){
                     obj.put("value", value);
                     obj.put("name", sensorName);
+                    t.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
                     t.sendResponseHeaders(200, obj.toString().length());
                     os.write(obj.toString().getBytes());
                 } else {

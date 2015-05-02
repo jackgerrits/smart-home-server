@@ -20,6 +20,16 @@ Ensure that correct sensors are in the corresponding places in _options.prop_, s
 
 ###Web API
 * */* - Serves static pages in www directory
+
+Below requests require use of POST method, with a JSON object for authentication.
+```
+{
+    //These values are dependant on server configuration
+    "username":"<username here>",
+    "username":"<password here>"
+}
+```
+
 * */data/feed* - Long polling hook for server pushing events to client
 * */data/sensors* - Returns list of names of all connected sensors
 * */data/sensors/[sensorName]* - Returns current value of sensor

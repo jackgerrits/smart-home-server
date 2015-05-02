@@ -13,7 +13,6 @@ import java.util.ArrayList;
  * Created by Jack on 23/04/2015.
  */
 public class Phidget {
-
     private ArrayList<Sensor> sensors;
     private SensorController sensorController = SensorController.get();
     private InterfaceKitPhidget ik;

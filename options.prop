@@ -4,7 +4,8 @@ Application/webserver server port
 server-port=7777
 
 username=admin
-password=cheese
+#sha256 hash of desired password
+password-hash=873ac9ffea4dd04fa719e8920cd6938f0c23cd678af330939cff53c3d2855f34
 
 ssl-password=password
 ssl-keystore=keystore.jks

@@ -16,6 +16,7 @@ public class Options {
     private String filename = "options.prop";
     private Properties properties;
 
+
     public static Options get() {
         if(self == null){
             self = new Options();
@@ -184,11 +185,12 @@ public class Options {
         }
     }
 
-    public String getPassword(){
-        if(isPropertyValid("password")){
-            return properties.getProperty("password");
+    public String getPasswordHash(){
+        if(isPropertyValid("password-hash")){
+            return properties.getProperty("password-hash");
         } else {
             return "password";
         }
     }
+
 }

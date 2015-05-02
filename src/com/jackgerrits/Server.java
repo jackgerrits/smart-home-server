@@ -22,12 +22,12 @@ import java.util.concurrent.Executors;
  * Created by Jack on 21/03/2015.
  */
 public class Server {
-    private static Server self = new Server();
+    private static Server self = null;
     private SensorController sensorController;
     private HttpsServer server = null;
     private FeedHandler ps;
     private final String username;
-    private final String password;
+
 
     public static Server get() {
         if(self == null){
@@ -43,7 +43,6 @@ public class Server {
         sensorController = SensorController.get();
         int port = options.getServerPort();
         username = options.getUsername();
-        password = options.getPassword();
 
         SSLContext sslContext = null;
         try {
@@ -130,9 +129,10 @@ public class Server {
             password = (String)body.get("password");
         }
 
-        if(password.equals(password) && username.equals(username)){
+        if(PasswordHash.validatePassword(password) && username.equals(username)){
             return true;
         }
+
         handleAuthFailure(t);
         return false;
     }
