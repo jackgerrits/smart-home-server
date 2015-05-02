@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -188,7 +189,10 @@ public class EventReader {
                 JSONObject current = (JSONObject) event;
                 processCurrent(current);
             }
-        } catch (IOException | ParseException e) {
+        } catch (FileNotFoundException e) {
+            System.out.print("ERROR: "+ filename + " not found!");
+            System.exit(1);
+        } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
 
