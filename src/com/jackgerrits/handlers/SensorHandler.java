@@ -16,6 +16,9 @@ import java.util.Collections;
 
 /**
  * Created by Jack on 21/03/2015.
+ *
+ *
+ * @author Jack Gerrits
  */
 public class SensorHandler implements HttpHandler {
     SensorController sensorController;

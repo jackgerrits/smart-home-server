@@ -3,8 +3,10 @@ package com.jackgerrits;
 import com.jackgerrits.handlers.FeedHandler;
 import com.jackgerrits.handlers.SensorHandler;
 import com.jackgerrits.handlers.StaticHandler;
-import com.sun.net.httpserver.*;
-import com.sun.scenario.Settings;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpsConfigurator;
+import com.sun.net.httpserver.HttpsParameters;
+import com.sun.net.httpserver.HttpsServer;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
@@ -19,7 +21,11 @@ import java.security.cert.CertificateException;
 import java.util.concurrent.Executors;
 
 /**
- * Created by Jack on 21/03/2015.
+ * Created by Jack on 21/03/2015 <br>
+ * Server class is essentially the overall driver, it is a singleton class. <br>
+ * It's primary role is running the web server as well as creating and communicating with the <code>SensorController</code>
+ *
+ * @author Jack Gerrits
  */
 public class Server {
     private static Server self = null;
@@ -28,7 +34,10 @@ public class Server {
     private FeedHandler ps;
     private final String username;
 
-
+    /**
+     * Gets the static reference to itself, otherwise creates a <code>Server</code> object.
+     * @return Singleton <code>Server</code> object.
+     */
     public static Server get() {
         if(self == null){
             self = new Server();
@@ -36,7 +45,12 @@ public class Server {
         return self;
     }
 
-    //runs webserver and application server
+
+    /**
+     * Constructs server instance <br>
+     * Configures SSL for server and sets up routes for '/data/feed', '/data/sensors' and '/'<br>
+     * The finally starts web server.
+     */
     public Server(){
         self = this;
         Options options = Options.get();
@@ -49,8 +63,12 @@ public class Server {
             server = HttpsServer.create(new InetSocketAddress(port), 0);
 
             sslContext = SSLContext.getInstance("TLS");
+
+            //retrieves SSL password from options file
             char[] sslPassword = options.getSSLPassword().toCharArray();
             KeyStore keystore = KeyStore.getInstance("JKS");
+
+            //opens keystore file specified in options file
             FileInputStream keystoreFile = new FileInputStream(options.getSSLKeystore());
             keystore.load(keystoreFile, sslPassword);
 
@@ -65,7 +83,6 @@ public class Server {
         } catch (IOException | CertificateException | KeyStoreException | KeyManagementException | UnrecoverableKeyException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
 
         HttpsConfigurator httpsConfigurator = new HttpsConfigurator(sslContext) {
             @Override
@@ -101,8 +118,15 @@ public class Server {
         t.sendResponseHeaders(401, -1);
     }
 
+    /**
+     * Authenticates a request with HttpExchange t
+     * @param t HttpExchange for incoming request
+     * @return <b>true</b> if authentication is successful
+     * @throws IOException issue with sending http response or reading post body
+     */
     public boolean authRequest(HttpExchange t) throws IOException{
-         if(t.getRequestMethod().equals("GET")){
+        //will not authenticate a GET request
+        if(t.getRequestMethod().equals("GET")){
             t.getResponseHeaders().set("Reason", "GET not supported.");
             t.sendResponseHeaders(401, -1);
             return false;
@@ -112,6 +136,7 @@ public class Server {
         StringBuilder out =  new StringBuilder();
         String line;
 
+        //reads in post body
         while ((line = br.readLine()) != null) {
             out.append(line);
         }
@@ -119,7 +144,9 @@ public class Server {
         String username = "";
         String password = "";
 
+        //parses body into JSON object
         JSONObject body = (JSONObject)(JSONValue.parse(out.toString()));
+
 
         if(body.containsKey("username")){
            username = (String)body.get("username");
@@ -129,14 +156,21 @@ public class Server {
             password = (String)body.get("password");
         }
 
+        //if either password or username field was omitted in JSON, it will not equal credentials on server
         if(PasswordHash.validatePassword(password) && username.equals(username)){
             return true;
         }
 
+        //returns false when password and username didn't equal and notifies client
         handleAuthFailure(t);
         return false;
     }
 
+    /**
+     * Responds to request with 404 message
+     * @param t HttpExchange to respond to
+     * @throws IOException issue with sending http response
+     */
     public void serve404(HttpExchange t) throws IOException {
         String response = "<h1>404 - Not Found</h1>\n";
         t.sendResponseHeaders(404, response.length());
@@ -146,6 +180,9 @@ public class Server {
     }
 
 
+    /**
+     * Stops the server, by calling stop to <code>FeedHandler</code> thread and <code>SensorController</code>
+     */
     public void stop(){
         System.out.println("Server stopping...");
         server.stop(0);

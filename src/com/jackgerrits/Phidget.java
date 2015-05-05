@@ -10,6 +10,7 @@ import com.phidgets.event.SensorChangeListener;
 import java.util.ArrayList;
 
 /**
+ * @author Jack Gerrits
  * Created by Jack on 23/04/2015.
  */
 public class Phidget {
