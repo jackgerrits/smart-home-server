@@ -40,7 +40,14 @@ public class StaticHandler implements HttpHandler {
             os.close();
         } else {
             // Object exists and is a file: accept with response code 200.
-            t.getResponseHeaders().set("Content-Type", Files.probeContentType(file.toPath()));
+            String fileType = Files.probeContentType(file.toPath());
+            //probeContentType returns null if it cannot determine type
+            //On OSX it seems to always return null, could be a bug?
+            //Browser can determine content type in this situation
+            if(fileType !=  null){
+                t.getResponseHeaders().set("Content-Type", fileType );
+            }
+
             t.sendResponseHeaders(200, 0);
             OutputStream os = t.getResponseBody();
             FileInputStream fs = new FileInputStream(file);
