@@ -191,6 +191,10 @@ public class SensorController {
         return -1;
     }
 
+    public Event evalEvent(String eventName){
+        return eventTester.evalEvent(eventName);
+    }
+
     /**
      * Check if there are events in the event queue
      * @return true if there are events in queue, false if empty
@@ -216,6 +220,7 @@ public class SensorController {
      * @param in Event to add
      */
     public synchronized void addEvent(Event in) {
+        //sends event off to be tested for AND events
         addEvents(eventTester.evalEvent(in));
         if(!in.isHidden()){
             events.add(in);

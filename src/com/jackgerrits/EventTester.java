@@ -31,6 +31,22 @@ public class EventTester {
         andRules = rc.getAndEventRules();
     }
 
+    Event evalEvent(String eventName){
+        ArrayList<EventRule> allRules = new ArrayList<>(rules);
+        allRules.addAll(andRules);
+
+        for(EventRule e : allRules){
+            if(e.isCorrespondingTo(eventName)){
+                try {
+                    return e.testEvent();
+                } catch (PhidgetException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+
     //when an event is passed in to be evaluated then it is being testEvent for AND events
     public ArrayList<Event> evalEvent(Event event) {
         ArrayList<Event> outcomes = new ArrayList<>();

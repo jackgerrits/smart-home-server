@@ -46,6 +46,11 @@ public class ChangeEventRule extends EventRule {
     }
 
     @Override
+    public boolean isCorrespondingTo(String eventName) {
+        return eventName.equals(name);
+    }
+
+    @Override
     public Event testEvent() throws PhidgetException {
         return null;
     }

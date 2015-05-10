@@ -73,23 +73,18 @@ public class ThresholdEventRule extends EventRule {
 
     @Override
     public Event testEvent() throws PhidgetException {
-        return null;
-    }
-
-
-
-    public Event test(String subname) throws PhidgetException {
-        if(subname.equals(name_gt)){
-            if((sensorController.getVal(sensorName) > threshold)){
-                return new Event(name_gt,description_gt, hideFromFeed);
-            }
-        } else if (subname.equals(name_lt)){
-            if((sensorController.getVal(sensorName) < threshold)){
-                return new Event(name_lt,description_lt, hideFromFeed);
-            }
+        if((sensorController.getVal(sensorName) > threshold)){
+            return new Event(name_gt,description_gt, hideFromFeed);
+        } else {
+            return new Event(name_lt,description_lt, hideFromFeed);
         }
-        return null;
     }
+
+    @Override
+    public boolean isCorrespondingTo(String eventName) {
+        return eventName.equals(name) || eventName.equals(name_lt)  || eventName.equals(name_gt)  ;
+    }
+
 
     @Override
     public boolean isCorrespondingTo(Event event){

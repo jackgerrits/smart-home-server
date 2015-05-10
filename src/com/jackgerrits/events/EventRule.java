@@ -39,9 +39,7 @@ public abstract class EventRule {
         return isCorrespondingTo(event.getName());
     }
 
-    public boolean isCorrespondingTo(String eventName){
-        return eventName.equals(name);
-    }
+    public abstract boolean isCorrespondingTo(String eventName);
 
     public boolean canFire(){
         long timeNow = System.currentTimeMillis();

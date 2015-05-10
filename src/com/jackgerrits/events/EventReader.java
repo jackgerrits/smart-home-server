@@ -102,33 +102,7 @@ public class EventReader {
                         System.out.println("JSON ERROR: Missing field. Required fields for and: [type, name, description, event1, event2]");
                         System.exit(1);
                     } else {
-                        EventRule r1 = container.getEventRule(event1);
-                        EventRule r2 = container.getEventRule(event2);
-
-                        if( r1 == null || r2 == null){
-                            System.out.println("JSON ERROR: Supplied EventRules for AND are not defined.");
-                            System.exit(1);
-                        }
-
-                        if(r1.getType() == EventRule.type.THRESHOLD){
-                            String subName1 = (String) current.get("event1-subname");
-                            if(subName1 != null){
-                                r1 = new ThreshBundleEventRule((ThresholdEventRule)r1, subName1);
-                            }
-                            //System.out.println("JSON ERROR: Missing field. Threshold event in AND rule requires \"event#-subame\" to define threshold state to testEvent.");
-
-                        }
-
-                        if(r2.getType() == EventRule.type.THRESHOLD){
-                            String subName2 = (String) current.get("event2-subname");
-                            if(subName2 != null){
-                                r2 = new ThreshBundleEventRule((ThresholdEventRule)r2, subName2);
-                            }
-                            //System.out.println("JSON ERROR: Missing field. Threshold event in AND rule requires \"event#-subame\" to define threshold state to testEvent.");
-                        }
-
-                        container.add(new AndEventRule(name, description, r1, r2, hidden, timeout));
-
+                        container.add(new AndEventRule(name, description, event1, event2, hidden, timeout));
                     }
                     break;
                 case "entityDetection":

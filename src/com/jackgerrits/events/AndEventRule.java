@@ -10,8 +10,8 @@ import com.phidgets.event.SensorChangeEvent;
 public class AndEventRule extends EventRule {
 
     private String description;
-    private EventRule rule1;
-    private EventRule rule2;
+    String event1;
+    String event2;
 
     /*
      * AND event works for CHANGE, EQUAL, THRESHOLD
@@ -19,87 +19,55 @@ public class AndEventRule extends EventRule {
      * To testEvent whether state is in either of two threshold states, ThreshBundleEventRule must be passed containing the Threshold event and sub event name
      */
 
-    public AndEventRule(String name, String description, EventRule r1, EventRule r2, boolean hideFromFeed, int timeout){
+    public AndEventRule(String name, String description, String event1, String event2, boolean hideFromFeed, int timeout){
         super(name, hideFromFeed, timeout);
         this.description = description;
-        rule1 = r1;
-        rule2 = r2;
+        this.event1 = event1;
+        this.event2 = event2;
     }
 
 
-    /*redundant code*/
     @Override
     public Event testEvent(InputChangeEvent ie, boolean override) throws PhidgetException {
-        /*
-        Event res1 = rule1.testEvent(ie, true);
-        Event res2 = rule2.testEvent(ie, true);
-
-        if(res1 != null && (rule2.testEvent() != null) ){
-            if(canFire() || override){
-                return new Event(name, description, hideFromFeed);
-            }
-        }
-        if ((res2 != null) && (rule1.testEvent() != null)){
-            if(canFire() || override){
-                return new Event(name, description, hideFromFeed);
-            }
-        }
-
-        if (res1 != null && res2 != null){
-            if(override || canFire()){
-                return new Event(name, description, hideFromFeed);
-            }
-        }*/
-
         return null;
     }
 
     public Event testEvent(Event event) throws PhidgetException {
-        if(rule1.isCorrespondingTo(event)){
-            if(rule2.testEvent()!=null){
+        if(event.getName().equals(event1)){
+            Event testResult = sensorController.evalEvent(event2);
+            if(testResult != null && testResult.getName().equals(event2)){
                 return new Event(name, description, hideFromFeed);
             }
-        }
-
-        if(rule2.isCorrespondingTo(event)){
-            if(rule1.testEvent() != null){
+        } else if(event.getName().equals(event2)){
+            Event testResult = sensorController.evalEvent(event1);
+            if(testResult != null && testResult.getName().equals(event1)){
                 return new Event(name, description, hideFromFeed);
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean isCorrespondingTo(String eventName) {
+        return eventName.equals(name);
     }
 
     /*redundant code*/
     @Override
     public Event testEvent(SensorChangeEvent se, boolean override) throws PhidgetException {
-        /*
-        Event res1 = rule1.testEvent(se, true);
-        Event res2 = rule2.testEvent(se, true);
-
-        if((res1 != null) && (rule2.testEvent() != null) ){
-            if(override || canFire() ){
-                return new Event(name, description, hideFromFeed);
-            }
-        }
-        if ((res2 != null) && (rule1.testEvent() != null)){
-            if(override || canFire()){
-                return new Event(name, description, hideFromFeed);
-            }
-        }
-
-        if (res1 != null && res2 != null){
-            if(override || canFire()){
-                return new Event(name, description, hideFromFeed);
-            }
-        }
-        */
-
         return null;
     }
 
     @Override
     public Event testEvent() throws PhidgetException {
-        if((rule1.testEvent() != null) && (rule2.testEvent() != null)){
+        Event resEvent1 = sensorController.evalEvent(event1);
+        Event resEvent2 = sensorController.evalEvent(event2);
+
+        if(resEvent1 == null || resEvent2 == null){
+            return null;
+        }
+
+        if(resEvent1.getName().equals(event1) && resEvent2.getName().equals(event2)){
             return new Event(name, description, hideFromFeed);
         }
         return null;

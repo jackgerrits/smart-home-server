@@ -42,6 +42,11 @@ public class EqualEventRule extends EventRule {
         return null;
     }
 
+    @Override
+    public boolean isCorrespondingTo(String eventName) {
+        return eventName.equals(name);
+    }
+
     public Event testForEvent(Sensor eventSensor, boolean override) throws PhidgetException{
         if(eventSensor != null && eventSensor.getName().equals(sensorName)){
             if(sensorController.getVal(eventSensor) == val){

@@ -27,7 +27,6 @@ public class EntityDetectionEventRule extends EventRule{
         isHidden = hideFromFeed;
         MotionObserver mo = new MotionObserver();
         mo.setIsOccupied();
-        System.out.println(getParam("ir-sensor"));
     }
 
     @Override
@@ -43,6 +42,8 @@ public class EntityDetectionEventRule extends EventRule{
         }
         return null;
     }
+
+
 
     @Override
     public Event testEvent(SensorChangeEvent se, boolean override) throws PhidgetException {
