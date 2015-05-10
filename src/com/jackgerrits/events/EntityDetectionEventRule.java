@@ -27,12 +27,12 @@ public class EntityDetectionEventRule extends EventRule{
         isHidden = hideFromFeed;
         MotionObserver mo = new MotionObserver();
         mo.setIsOccupied();
-
+        System.out.println(getParam("ir-sensor"));
     }
 
     @Override
     public Event testEvent(InputChangeEvent ie, boolean override) throws PhidgetException {
-        Sensor eventSensor = sensorController.getSensor(ie.getIndex(), Sensor.sensorType.DIGITAL);
+        Sensor eventSensor = sensorController.getSensor(ie.getIndex(), Sensor.sensorType.DIGITAL, ie.getSource());
         // if door sensor isn't defined hash table returns null, and causes if to be false
         if(eventSensor.getName().equals(paramList.get("door-sensor"))){
             if(canFire()){
@@ -46,8 +46,12 @@ public class EntityDetectionEventRule extends EventRule{
 
     @Override
     public Event testEvent(SensorChangeEvent se, boolean override) throws PhidgetException {
-        Sensor eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG);
+        Sensor eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG, se.getSource());
         // if ir sensor isn't defined hash table returns null, and causes if to be false
+//        System.out.println("IR event is tested with " + eventSensor.getName());
+//        System.out.println(se.getSource().toString());
+//        System.out.println(sensorController.getPhidget(paramList.get("ir-sensor")).getIK().toString());
+//        System.out.println(sensorController.getPhidget(paramList.get("ir-sensor")).getIK()==se.getSource());
         if(eventSensor.getName().equals(paramList.get("ir-sensor"))){
             if(canFire()){
                 System.out.println("door activity detected, listening for significant motion now");
@@ -117,7 +121,7 @@ public class EntityDetectionEventRule extends EventRule{
             motionChangeListener = new SensorChangeListener() {
                 @Override
                 public void sensorChanged(SensorChangeEvent sensorChangeEvent) {
-                    Sensor eventSensor = sensorController.getSensor(sensorChangeEvent.getIndex(), Sensor.sensorType.ANALOG);
+                    Sensor eventSensor = sensorController.getSensor(sensorChangeEvent.getIndex(), Sensor.sensorType.ANALOG, sensorChangeEvent.getSource());
                     if(eventSensor.getName().equals(paramList.get("motion-sensor"))){
                         totalFluctuation += Math.abs(lastValue - sensorChangeEvent.getValue());
                         lastValue = sensorChangeEvent.getValue();

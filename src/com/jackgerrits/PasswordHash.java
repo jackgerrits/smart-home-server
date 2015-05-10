@@ -29,10 +29,10 @@ public class PasswordHash {
         Options ops = Options.get();
         String correctHash = ops.getPasswordHash();
         correctHash = correctHash.toLowerCase();
-        System.out.println("Correct: "+ correctHash);
+//        System.out.println("Correct: "+ correctHash);
         String queryHash = getHash(password);
         queryHash = queryHash.toLowerCase();
-        System.out.println("Query: "+ queryHash);
+//        System.out.println("Query: "+ queryHash);
 
         return correctHash.equals(queryHash);
     }

@@ -21,6 +21,10 @@ public class Phidget {
     private int port = -1;
     private int serial = -1;
 
+    public boolean isSamePhidget(com.phidgets.Phidget phidget){
+        return ik == phidget;
+    }
+
     // Used for USB
     public Phidget(ArrayList<Sensor> sensors) throws PhidgetException {
         this.sensors = sensors;

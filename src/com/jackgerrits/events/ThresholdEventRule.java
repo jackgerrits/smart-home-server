@@ -52,7 +52,7 @@ public class ThresholdEventRule extends EventRule {
 
     public Event testEvent(SensorChangeEvent se, boolean override) throws PhidgetException {
         Sensor eventSensor;
-        eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG);
+        eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG, se.getSource());
 
         if(eventSensor != null && eventSensor.getName().equals(sensorName)){
             int currentValue = sensorController.getVal(eventSensor);

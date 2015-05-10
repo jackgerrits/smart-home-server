@@ -23,14 +23,14 @@ public class EqualEventRule extends EventRule {
 
     @Override
     public Event testEvent(InputChangeEvent ie, boolean override) throws PhidgetException {
-        Sensor eventSensor = sensorController.getSensor(ie.getIndex(), Sensor.sensorType.DIGITAL);
+        Sensor eventSensor = sensorController.getSensor(ie.getIndex(), Sensor.sensorType.DIGITAL, ie.getSource());
 
         return testForEvent(eventSensor, override);
     }
 
     @Override
     public Event testEvent(SensorChangeEvent se, boolean override) throws PhidgetException {
-        Sensor eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG);
+        Sensor eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG, se.getSource());
 
         return testForEvent(eventSensor, override);
     }

@@ -22,7 +22,7 @@ public class ChangeEventRule extends EventRule {
     @Override
     public Event testEvent(InputChangeEvent ie, boolean override) throws PhidgetException {
         Sensor eventSensor;
-        eventSensor = sensorController.getSensor(ie.getIndex(), Sensor.sensorType.DIGITAL);
+        eventSensor = sensorController.getSensor(ie.getIndex(), Sensor.sensorType.DIGITAL, ie.getSource());
 
         if(eventSensor != null && eventSensor.getName().equals(sensorName)){
             if(override || canFire()){
@@ -35,7 +35,7 @@ public class ChangeEventRule extends EventRule {
     @Override
     public Event testEvent(SensorChangeEvent se, boolean override) throws PhidgetException {
         Sensor eventSensor;
-        eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG);
+        eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG, se.getSource());
 
         if(eventSensor != null && eventSensor.getName().equals(sensorName)){
             if(override || canFire()){

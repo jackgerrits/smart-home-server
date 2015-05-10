@@ -148,10 +148,10 @@ public class SensorController {
      * @param type Sensor type (ANALOG, DIGITAL)
      * @return Sensor object if found, null if not found
      */
-    public Sensor getSensor(int port, Sensor.sensorType type) {
+    public Sensor getSensor(int port, Sensor.sensorType type, com.phidgets.Phidget sourcePhidget) {
         for(Phidget p : phidgets){
             Sensor current = p.getSensor(port, type);
-            if(current!=null){
+            if(current!=null && p.isSamePhidget(sourcePhidget)){
                 return current;
             }
         }
