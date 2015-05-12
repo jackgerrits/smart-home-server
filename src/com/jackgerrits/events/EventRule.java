@@ -10,9 +10,7 @@ import com.phidgets.event.SensorChangeEvent;
  * Created by jackgerrits on 23/03/15.
  */
 public abstract class EventRule {
-    public enum type {
-        EQUAL, CHANGE, THRESHOLD, AND, OR, BUNDLE, ENTITY_DETECTION
-    }
+
 
     String name;
     Options ops;
@@ -57,7 +55,6 @@ public abstract class EventRule {
     public abstract Event testEvent(InputChangeEvent ie, boolean override) throws PhidgetException ;
     public abstract Event testEvent(SensorChangeEvent se, boolean override) throws PhidgetException;
     public abstract Event testEvent() throws PhidgetException;
-    public abstract type getType();
 
 
 }

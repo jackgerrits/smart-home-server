@@ -1,10 +1,7 @@
-package com.jackgerrits;
+package com.jackgerrits.events;
 
-import com.jackgerrits.events.AndEventRule;
-import com.jackgerrits.events.Event;
-import com.jackgerrits.events.EventReader;
+import com.jackgerrits.Options;
 import com.jackgerrits.events.EventReader.RulesContainer;
-import com.jackgerrits.events.EventRule;
 import com.phidgets.PhidgetException;
 import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
@@ -31,7 +28,7 @@ public class EventTester {
         andRules = rc.getAndEventRules();
     }
 
-    Event evalEvent(String eventName){
+    public Event evalEvent(String eventName){
         ArrayList<EventRule> allRules = new ArrayList<>(rules);
         allRules.addAll(andRules);
 

@@ -197,9 +197,9 @@ public class EventReader {
 
 
         public void add(EventRule rule){
-            if(rule.getType() == EventRule.type.AND){
+            if(rule instanceof AndEventRule){
                 andEventRules.add((AndEventRule)rule);
-            } else if(rule.getType() ==  EventRule.type.ENTITY_DETECTION) {
+            } else if(rule instanceof EntityDetectionEventRule) {
                 et = (EntityDetectionEventRule)rule;
                 eventRules.add(0,rule);
             } else {

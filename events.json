@@ -4,28 +4,36 @@
       "type": "change",
       "name": "door",
       "description": "Door opened/closed",
-      "sensor": "magSwitch",
+      "sensor": "doorSwitch",
       "timeout": 400,
       "hide-from-feed": true
-    },
-    {
-      "type": "change",
-      "name": "sensorTouch",
-      "description": "Sensor touched.",
-      "sensor": "touch"
     },
     {
       "type": "equal",
       "name": "doorClosed",
       "description": "Door closed.",
-      "sensor": "magSwitch",
+      "sensor": "doorSwitch",
       "value": 1
     },
     {
       "type": "equal",
       "name": "doorOpen",
       "description": "Door opened.",
-      "sensor": "magSwitch",
+      "sensor": "doorSwitch",
+      "value": 0
+    },
+    {
+      "type": "equal",
+      "name": "windowClosed",
+      "description": "Window closed.",
+      "sensor": "windowSwitch",
+      "value": 1
+    },
+    {
+      "type": "equal",
+      "name": "windowOpen",
+      "description": "Window opened.",
+      "sensor": "windowSwitch",
       "value": 0
     },
     {
@@ -36,23 +44,24 @@
       "description_lt": "The light has been turned off.",
       "description_gt": "The light has been turned on.",
       "sensor": "light",
-      "value": 30
+      "value": 15
+    },
+    {
+      "type": "threshold",
+      "name": "chair",
+      "name_lt": "notSitting",
+      "name_gt": "sitting",
+      "description_lt": "The chair is no longer occupied.",
+      "description_gt": "The chair has been sat in.",
+      "sensor": "force",
+      "value": 200
     },
     {
       "type": "and",
-      "name": "alarm",
-      "description": "Door is open and lights changed.",
-      "event1": "doorOpen",
-      "event2": "lightStatus",
-      "hide-from-feed": true
-    },
-    {
-      "type": "and",
-      "name": "test",
-      "description": "Door is open and lights have been turned on.",
-      "event1": "alarm",
-      "event2": "lightStatus",
-      "event2-subname": "lightOn"
+      "name": "chairLowLight",
+      "description": "Using the computer in the dark can be bad for your eyes. (sitting and lights off)",
+      "event1": "sitting",
+      "event2": "lightOff"
     },
     {
       "type": "entityDetection",
@@ -65,33 +74,23 @@
       "description-enter": "Someone has entered the room.",
       "description-occupied": "The room is occupied.",
       "description-absent": "The room is empty.",
-      "ir-sensor": "irdistance",
+      "door-sensor":"doorSwitch",
       "motion-sensor": "motion",
-      "door-sensor": "magSwitch",
-      "timeout": 2000
+      "timeout": 4000
     },
     {
       "type": "and",
-      "name": "lightperson",
-      "description": "Lights on and person present",
-      "event1": "enter",
-      "event2": "lightStatus",
-      "event2-subname": "lightOn"
+      "name": "leftRoomWindowOpen",
+      "description": "The window has been left open, the room might get cold!",
+      "event1": "leave",
+      "event2": "windowOpen"
     },
     {
       "type": "and",
-      "name": "doorperson",
-      "description": "door closed and person in room",
-      "event1": "doorClosed",
-      "event2": "occupied"
-    },
-    {
-      "type": "and",
-      "name": "touchdoorperson",
-      "description": "sensor touched with person present and door closed",
-      "event1": "sensorTouch",
-      "event2": "doorperson"
+      "name": "leftLightOn",
+      "description": "The lights have been left on!",
+      "event1": "leave",
+      "event2": "lightOn"
     }
-
   ]
 }

@@ -1,6 +1,7 @@
 package com.jackgerrits;
 
 import com.jackgerrits.events.Event;
+import com.jackgerrits.events.EventTester;
 import com.phidgets.PhidgetException;
 import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
@@ -116,7 +117,7 @@ public class SensorController {
 
     /**
      * Gets ArrayList of sensor name Strings from all connected Phidgets
-     * @return ArrayList\<String\> of sensor names
+     * @return list of all sensor names
      */
     public ArrayList<String> getConnectedSensors(){
         ArrayList<String> all = new ArrayList<>();
@@ -146,6 +147,7 @@ public class SensorController {
      * Gets Sensor corresponding to port and type
      * @param port Phidget port it is connected to
      * @param type Sensor type (ANALOG, DIGITAL)
+     * @param sourcePhidget interfaceKitPhidget object which manages this phidget, retrieved from .getSource() on change event
      * @return Sensor object if found, null if not found
      */
     public Sensor getSensor(int port, Sensor.sensorType type, com.phidgets.Phidget sourcePhidget) {
@@ -191,6 +193,11 @@ public class SensorController {
         return -1;
     }
 
+    /**
+     * Evaluate the event of the given eventName string
+     * @param eventName name of event as defined in events.json
+     * @return Event if event is true, null if false
+     */
     public Event evalEvent(String eventName){
         return eventTester.evalEvent(eventName);
     }

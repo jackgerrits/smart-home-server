@@ -105,7 +105,10 @@ public class Server {
         System.out.println("Server started successfully!");
     }
 
-
+    /**
+     * Responds to an OPTIONS request used for cross origin requests
+     * @param t HttpExchange for incoming request
+     */
     public void handleOptionsRequest(HttpExchange t) throws IOException{
         t.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
         t.getResponseHeaders().set("Access-Control-Allow-Methods", "POST,OPTIONS");
@@ -113,6 +116,11 @@ public class Server {
         t.sendResponseHeaders(200, -1);
     }
 
+
+    /**
+     * Responds to client on failed authentication
+     * @param t HttpExchange for incoming request
+     */
     public void handleAuthFailure(HttpExchange t) throws IOException{
         t.getResponseHeaders().set("Reason", "Incorrect username or password");
         t.sendResponseHeaders(401, -1);
@@ -122,7 +130,6 @@ public class Server {
      * Authenticates a request with HttpExchange t
      * @param t HttpExchange for incoming request
      * @return <b>true</b> if authentication is successful
-     * @throws IOException issue with sending http response or reading post body
      */
     public boolean authRequest(HttpExchange t) throws IOException{
         //will not authenticate a GET request
@@ -147,11 +154,12 @@ public class Server {
         //parses body into JSON object
         JSONObject body = (JSONObject)(JSONValue.parse(out.toString()));
 
-
+        //retrieves username from post body if it exists
         if(body.containsKey("username")){
            username = (String)body.get("username");
         }
 
+        //receives password from post body if it exists
         if(body.containsKey("password")){
             password = (String)body.get("password");
         }
@@ -169,7 +177,6 @@ public class Server {
     /**
      * Responds to request with 404 message
      * @param t HttpExchange to respond to
-     * @throws IOException issue with sending http response
      */
     public void serve404(HttpExchange t) throws IOException {
         String response = "<h1>404 - Not Found</h1>\n";

@@ -16,7 +16,10 @@ public class Options {
     private String filename = "options.prop";
     private Properties properties;
 
-
+    /**
+     * Gets the static reference to itself, otherwise creates an <code>Options</code> object.
+     * @return Singleton <code>Options</code> object.
+     */
     public static Options get() {
         if(self == null){
             self = new Options();
@@ -24,6 +27,9 @@ public class Options {
         return self;
     }
 
+    /**
+     * constructs options object and loads the "options.prop" file
+     */
     public Options(){
         self = this;
         properties = new Properties();
@@ -45,6 +51,11 @@ public class Options {
         System.out.println("Options read successfully!");
     }
 
+    /**
+     * gets the list of defined sensors for the specified Phidget number
+     * @param phidgetNumber phidget number to get sensors for
+     * @return ArrayList of Sensors, will be empty if no Sensors were defined
+     */
     public ArrayList<Sensor> getSensors(int phidgetNumber) {
         ArrayList<Sensor> sensors = new ArrayList<>();
 
@@ -65,10 +76,19 @@ public class Options {
         return sensors;
     }
 
+    /**
+     * Checks if the property exists in the options and is defined
+     * @param property property to check
+     * @return true if valid
+     */
     public boolean isPropertyValid(String property){
         return (properties.containsKey(property) && !properties.getProperty(property).equals(""));
     }
 
+    /**
+     * gets ArrayList of all defined Phidgets
+     * @return ArrayList of Phidgets
+     */
     ArrayList<Phidget> getPhidgets(){
         if(!isPropertyValid("number-of-phidgets")){
             System.out.println("OPTIONS ERROR: 'number-of-phidgets' must be defined");
@@ -90,6 +110,11 @@ public class Options {
      return res;
     }
 
+    /**
+     * Creates Phidget from information in options.prop
+     * @param phidgetNumber number of phidget
+     * @return Phidget object
+     */
     Phidget getPhidget(int phidgetNumber) throws PhidgetException{
         if(!isPropertyValid(phidgetNumber+"-phidget-type")){
             System.out.println("OPTIONS ERROR: '"+phidgetNumber+"-phidget-type' must be defined as either usb or network");
@@ -119,7 +144,11 @@ public class Options {
         }
     }
 
-
+    /**
+     * gets serial for specified phidget, or default if property omitted
+     * @param phidgetNumber specific phidget number
+     * @return serial, or default -1
+     */
     public int getPhidgetSerial(int phidgetNumber){
         if(isPropertyValid(phidgetNumber+"-phidget-serial")){
             return Integer.parseInt(properties.getProperty(phidgetNumber+"-phidget-serial"));
@@ -129,6 +158,11 @@ public class Options {
     }
 
 
+    /**
+     * gets ip for specified Phidget, or default if property omitted
+     * @param phidgetNumber specific phidget number
+     * @return serial, or default "localhost"
+     */
     public String getPhidgetIp(int phidgetNumber){
         if(isPropertyValid(phidgetNumber+"-phidget-ip")){
             return properties.getProperty(phidgetNumber+"-phidget-ip");
@@ -137,6 +171,11 @@ public class Options {
         }
     }
 
+    /**
+     * gets port for specified Phidget, or default if property omitted
+     * @param phidgetNumber specific Phidget number
+     * @return serial, or default 5001
+     */
     public int getPhidgetPort(int phidgetNumber){
         if(isPropertyValid(phidgetNumber+"-phidget-port")){
             return Integer.parseInt(properties.getProperty(phidgetNumber+"-phidget-port"));
@@ -145,6 +184,10 @@ public class Options {
         }
     }
 
+    /**
+     * gets application server port, or default if property omitted
+     * @return port, or default 8888
+     */
     public int getServerPort(){
         if(isPropertyValid("server-port")) {
             return Integer.parseInt(properties.getProperty("server-port"));
@@ -153,6 +196,10 @@ public class Options {
         }
     }
 
+    /**
+     * gets ssl password, or default if property omitted
+     * @return ssl password, or default "password"
+     */
     public String getSSLPassword(){
         if(isPropertyValid("ssl-password")) {
             return properties.getProperty("ssl-password");
@@ -161,6 +208,10 @@ public class Options {
         }
     }
 
+    /**
+     * gets ssl keystore name, or default if omitted
+     * @return ssl keystore name, or default "keystore"
+     */
     public String getSSLKeystore(){
         if(isPropertyValid("ssl-keystore")) {
             return properties.getProperty("ssl-keystore");
@@ -169,6 +220,10 @@ public class Options {
         }
     }
 
+    /**
+     * gets default timeout, or default if omitted
+     * @return timeout, or default 2000
+     */
     public int getDefaultTimeout(){
         if(isPropertyValid("default-event-timeout")) {
             return Integer.parseInt(properties.getProperty("default-event-timeout"));
@@ -177,6 +232,10 @@ public class Options {
         }
     }
 
+    /**
+     * get username, or default if omitted
+     * @return username, default admin
+     */
     public String getUsername(){
         if(isPropertyValid("username")){
             return properties.getProperty("username");
@@ -185,11 +244,15 @@ public class Options {
         }
     }
 
+    /**
+     * gets password, or default if omitted
+     * @return hash, or default "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8" hash for "password"
+     */
     public String getPasswordHash(){
         if(isPropertyValid("password-hash")){
             return properties.getProperty("password-hash");
         } else {
-            return "password";
+            return "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8";
         }
     }
 

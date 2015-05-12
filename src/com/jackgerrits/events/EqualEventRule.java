@@ -58,9 +58,4 @@ public class EqualEventRule extends EventRule {
         return null;
     }
 
-    @Override
-    public type getType() {
-        return type.EQUAL;
-    }
-
 }

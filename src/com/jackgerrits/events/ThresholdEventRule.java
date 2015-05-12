@@ -91,10 +91,4 @@ public class ThresholdEventRule extends EventRule {
         String n = event.getName();
         return n.equals(name) || n.equals(name_lt) || n.equals(name_gt);
     }
-
-    @Override
-    public type getType() {
-        return type.THRESHOLD;
-    }
-
 }

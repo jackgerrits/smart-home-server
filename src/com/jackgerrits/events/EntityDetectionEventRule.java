@@ -90,10 +90,6 @@ public class EntityDetectionEventRule extends EventRule{
         return isOccupied;
     }
 
-    @Override
-    public type getType() {
-        return type.ENTITY_DETECTION;
-    }
 
 
     /*

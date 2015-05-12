@@ -7,10 +7,16 @@ import java.util.Arrays;
 
 /**
  * Created by Jack on 2/05/2015.
+ * Utility methods for hashing and comparing passwords
  */
 public class PasswordHash {
     private static final String algorithm = "SHA-256";
 
+    /**
+     * Hashes supplied password with SHA-256
+     * @param password password to be hashed
+     * @return result encoded in hex
+     */
     public static String getHash(String password){
         MessageDigest digest = null;
         byte[] hash = new byte[0];
@@ -25,6 +31,11 @@ public class PasswordHash {
         return bytesToHex(hash);
     }
 
+    /**
+     * Hashes inputted password and compares result with stored hash for authentication
+     * @param password query password to be hashed and compared
+     * @return true if hashes match
+     */
     public static boolean validatePassword(String password){
         Options ops = Options.get();
         String correctHash = ops.getPasswordHash();
@@ -37,7 +48,11 @@ public class PasswordHash {
         return correctHash.equals(queryHash);
     }
 
-    //function from http://stackoverflow.com/questions/9655181/convert-from-byte-array-to-hex-string-in-java credit: @maybeWeCouldStealAVar
+    /**
+     * Converts byte array into hex encoded string. Credit: @maybeWeCouldStealAVar [http://stackoverflow.com/questions/9655181/convert-from-byte-array-to-hex-string-in-java]
+     * @param bytes byte array to convert
+     * @return encoded string
+     */
     public static String bytesToHex(byte[] bytes) {
         final char[] hexArray = "0123456789ABCDEF".toCharArray();
 

@@ -55,9 +55,4 @@ public class ChangeEventRule extends EventRule {
         return null;
     }
 
-    @Override
-    public type getType() {
-        return type.CHANGE;
-    }
-
 }

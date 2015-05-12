@@ -73,8 +73,4 @@ public class AndEventRule extends EventRule {
         return null;
     }
 
-    @Override
-    public type getType() {
-        return type.AND;
-    }
 }

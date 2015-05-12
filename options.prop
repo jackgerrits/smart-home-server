@@ -15,7 +15,7 @@ ssl-keystore=keystore.jks
 #----------PHIDGET SETTINGS----------
 
 #options for phidget
-number-of-phidgets=2
+number-of-phidgets=1
 
 #---PHIDGET 0---
 0-phidget-type=network
@@ -23,10 +23,12 @@ number-of-phidgets=2
 0-phidget-port=5001
 
 #Phidget 0 sensors
-0-analog2=motion
+0-analog0=motion
 0-analog3=light
-0-analog6=touch
-0-digital5=magSwitch
+#0-analog5=touch
+0-analog7=force
+0-digital5=doorSwitch
+0-digital7=windowSwitch
 
 #---PHIDGET 1---
 
