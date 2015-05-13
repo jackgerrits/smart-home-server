@@ -21,15 +21,21 @@ public class FeedHandler implements HttpHandler {
         sensorController = SensorController.get();
     }
 
+    /**
+     * Handles requests to the "/data/feed" route, holds the request until an event is ready to be send
+     * @param t HttpExchange to respond to
+     */
     public void handle(HttpExchange t) throws IOException {
         System.out.println("[Feed] Received feed request");
         Server server = Server.get();
 
+        //Responds to cross origin preflight request
         if(t.getRequestMethod().equals("OPTIONS")){
             server.handleOptionsRequest(t);
             return;
         }
 
+        //only responds if it is a POST request and authenticates
         if(server.authRequest(t) && t.getRequestMethod().equals("POST")) {
             //hold thread until there is an event ready
             while (!sensorController.areEvents()) {
@@ -44,6 +50,7 @@ public class FeedHandler implements HttpHandler {
                 }
             }
 
+            //Retrieves an event from the event queue
             Event current = sensorController.getEvent();
 
             System.out.println("[Feed] Serving event: " + current.getName());
@@ -62,6 +69,7 @@ public class FeedHandler implements HttpHandler {
 
     }
 
+    //Tells the waiting loop to stop
     public void stop(){
         killed = true;
     }

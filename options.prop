@@ -15,7 +15,7 @@ ssl-keystore=keystore.jks
 #----------PHIDGET SETTINGS----------
 
 #options for phidget
-number-of-phidgets=1
+number-of-phidgets=2
 
 #---PHIDGET 0---
 0-phidget-type=network

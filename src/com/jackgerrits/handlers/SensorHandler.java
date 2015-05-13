@@ -15,9 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Created by Jack on 21/03/2015.
- *
- *
  * @author Jack Gerrits
  */
 public class SensorHandler implements HttpHandler {
@@ -29,19 +26,26 @@ public class SensorHandler implements HttpHandler {
         connectedSensors = sensorController.getConnectedSensors();
     }
 
+    /**
+     * Handler for sensor route, serves either all connected sensors or specific sensor values depending on path
+     * @param t HttpExchange to respond to
+     */
     @Override
     public void handle(HttpExchange t) throws IOException {
         URI uri = t.getRequestURI();
         String path = uri.getPath();
         Server server = Server.get();
 
+        //Responds to cross origin preflight request
         if(t.getRequestMethod().equals("OPTIONS")){
             server.handleOptionsRequest(t);
             return;
         }
 
+        //only responds if it is a POST request and authenticates
         if( server.authRequest(t) && t.getRequestMethod().equals("POST")){
             if (path.equals("/data/sensors")){
+                //responds to "/data/sensors" with a JSON object of all connected sensors
                 JSONObject obj = new JSONObject();
                 JSONArray sensors =  new JSONArray();
 
@@ -55,6 +59,7 @@ public class SensorHandler implements HttpHandler {
                 os.write(obj.toString().getBytes());
                 os.close();
             } else if ((path.length() > 13) && (connectedSensors).contains(path.substring(14))){
+                //extracts everything after "/data/sensors/" and checks if it is one of the connected sensors
                 String sensorName = path.substring(14);
                 System.out.println("[Sensors] Serving: /data/sensors/"+ sensorName);
                 JSONObject obj = new JSONObject();
@@ -68,6 +73,7 @@ public class SensorHandler implements HttpHandler {
 
                 OutputStream os = t.getResponseBody();
 
+                //-1 means there was an error retrieving the value
                 if(value != -1){
                     obj.put("value", value);
                     obj.put("name", sensorName);
@@ -84,6 +90,7 @@ public class SensorHandler implements HttpHandler {
                 os.close();
             }
             else {
+                //if that sensor isnt found then it responds with 404
                 server.serve404(t);
             }
         }

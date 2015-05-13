@@ -15,17 +15,24 @@ import java.nio.file.Files;
  */
 public class StaticHandler implements HttpHandler {
 
+    /**
+     * Handler for the static route '/' when the request doesn't match the other routes
+     * Serves files out of the www directory in project directory
+     * @param t HttpExchange to respond to
+     */
     public void handle(HttpExchange t) throws IOException {
         System.out.println("[Static] Serving: " + t.getRequestURI().getPath());
         String root = System.getProperty("user.dir");
         URI uri = t.getRequestURI();
         String filePath =  "/www" + uri.getPath();
+        //gets index.html if request is root
         if(filePath.endsWith("/")){
             filePath += "index.html";
         }
         File file = new File(root + filePath).getCanonicalFile();
         if (!file.getPath().startsWith(root)) {
             // Suspected path traversal attack: reject with 403 error.
+            //root is project directory, all other directories are forbidden
             String response = "403 (Forbidden)\n";
             t.sendResponseHeaders(403, response.length());
             OutputStream os = t.getResponseBody();
@@ -41,6 +48,7 @@ public class StaticHandler implements HttpHandler {
         } else {
             // Object exists and is a file: accept with response code 200.
             String fileType = Files.probeContentType(file.toPath());
+
             //probeContentType returns null if it cannot determine type
             //On OSX it seems to always return null, could be a bug?
             //Browser can determine content type in this situation
