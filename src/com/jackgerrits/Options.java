@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 /**
- * Created by Jack on 21/03/2015.
+ * Handles reading user definedoptions from the options.prop file
+ * @author jackgerrits
  */
 public class Options {
     private static Options self = new Options();

@@ -33,6 +33,7 @@ public class Server {
     private HttpsServer server = null;
     private FeedHandler ps;
     private final String username;
+    private int port;
 
     /**
      * Gets the static reference to itself, otherwise creates a <code>Server</code> object.
@@ -55,7 +56,7 @@ public class Server {
         self = this;
         Options options = Options.get();
         sensorController = SensorController.get();
-        int port = options.getServerPort();
+        port = options.getServerPort();
         username = options.getUsername();
 
         SSLContext sslContext = null;
@@ -99,10 +100,6 @@ public class Server {
         server.createContext("/", new StaticHandler());
         server.setExecutor(Executors.newCachedThreadPool());
         server.setHttpsConfigurator(httpsConfigurator);
-
-        System.out.println("Starting server on port " + port + "...");
-        server.start();
-        System.out.println("Server started successfully!");
     }
 
     /**
@@ -132,9 +129,9 @@ public class Server {
      * @return <b>true</b> if authentication is successful
      */
     public boolean authRequest(HttpExchange t) throws IOException{
-        //will not authenticate a GET request
-        if(t.getRequestMethod().equals("GET")){
-            t.getResponseHeaders().set("Reason", "GET not supported.");
+        //will only authenticate a POST request
+        if(!t.getRequestMethod().equals("POST")){
+            t.getResponseHeaders().set("Reason", "Must use POST");
             t.sendResponseHeaders(401, -1);
             return false;
         }
@@ -184,6 +181,15 @@ public class Server {
         OutputStream os = t.getResponseBody();
         os.write(response.getBytes());
         os.close();
+    }
+
+    /**
+     * Starts the server that was configured in the constructor
+     */
+    public void start(){
+        System.out.println("Starting server on port " + port + "...");
+        server.start();
+        System.out.println("Server started successfully!");
     }
 
 

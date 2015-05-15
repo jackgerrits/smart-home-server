@@ -6,8 +6,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 /**
- * Created by Jack on 2/05/2015.
  * Utility methods for hashing and comparing passwords
+ * @author jackgerrits
  */
 public class PasswordHash {
     private static final String algorithm = "SHA-256";
@@ -40,10 +40,8 @@ public class PasswordHash {
         Options ops = Options.get();
         String correctHash = ops.getPasswordHash();
         correctHash = correctHash.toLowerCase();
-//        System.out.println("Correct: "+ correctHash);
         String queryHash = getHash(password);
         queryHash = queryHash.toLowerCase();
-//        System.out.println("Query: "+ queryHash);
 
         return correctHash.equals(queryHash);
     }

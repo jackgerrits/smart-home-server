@@ -37,19 +37,18 @@ public class SensorController {
     }
 
     /**
-     * Adds Phidget object to list of connected Phidgets
-     * @param phidget Phidget to add
+     * Constructs SensorController, loads Phidgets as specified in options.prop, loads event definitions as defined in events.json
      */
-    void addPhidget(Phidget phidget){
-        phidgets.add(phidget);
-    }
-
-    /**
-     * Adds collection of Phidgets to list of connected Phidgets
-     * @param inPhidgets Collection of Phidgets to add
-     */
-    void addPhidgets(Collection<Phidget> inPhidgets) {
-        phidgets.addAll(inPhidgets);
+    public SensorController(){
+        self = this;
+        ops = Options.get();
+        phidgets = ops.getPhidgets();
+        checkSensorNamesUnqiue();
+        events = new LinkedList<>();
+        System.out.println("Loading event definitions...");
+        eventTester = new EventTester();
+        eventTester.loadEvents("events.json");
+        System.out.println("Event definitions loaded successfully!");
     }
 
     /**
@@ -68,22 +67,6 @@ public class SensorController {
     }
 
     /**
-     * Constructs SensorController, loads Phidgets as specified in options.prop, loads event definitions as defined in events.json
-     */
-    public SensorController(){
-        self = this;
-        ops = Options.get();
-        phidgets = new ArrayList<>();
-        addPhidgets( ops.getPhidgets());
-        checkSensorNamesUnqiue();
-        events = new LinkedList<>();
-        System.out.println("Loading event definitions...");
-        eventTester = new EventTester();
-        eventTester.loadEvents("events.json");
-        System.out.println("Event definitions loaded successfully!");
-    }
-
-    /**
      * Evaluate sensor change event, adds deduced events to event queue, for analog sensor changes.
      * @param se SensorChangeEvent to evaluate
      */
@@ -91,12 +74,15 @@ public class SensorController {
         addEvents(eventTester.evalEvent(se));
     }
 
+    /**
+     * Verifies that all of the sensor names are unique, stops program and notifies user if they are not
+     */
     private void checkSensorNamesUnqiue(){
         ArrayList<String> sensors = getConnectedSensors();
         for(String s : sensors){
             for(String current : sensors ){
                 if(s == current){
-                    continue;
+                    continue;   //if the string references are the same then we can skip over this entry
                 }
                 if(s.equals(current)){
                     System.out.println("OPTIONS ERROR: Sensor names must be unique - not unique: '"+ s+"'");

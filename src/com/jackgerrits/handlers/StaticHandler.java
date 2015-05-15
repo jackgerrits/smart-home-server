@@ -11,7 +11,8 @@ import java.net.URI;
 import java.nio.file.Files;
 
 /**
- * Created by Jack on 21/03/2015.
+ * Handler for the static route '/' when the request doesn't match the other routes
+ * @author jackgerrits
  */
 public class StaticHandler implements HttpHandler {
 
@@ -56,13 +57,14 @@ public class StaticHandler implements HttpHandler {
                 t.getResponseHeaders().set("Content-Type", fileType );
             }
 
+            //sets response to 200 OK and sets variable content length
             t.sendResponseHeaders(200, 0);
             OutputStream os = t.getResponseBody();
             FileInputStream fs = new FileInputStream(file);
-            final byte[] buffer = new byte[0x10000];
+            final byte[] buffer = new byte[0x10000];    //Buffer size of 64kb
             int count = 0;
-            while ((count = fs.read(buffer)) >= 0) {
-                os.write(buffer,0,count);
+            while ((count = fs.read(buffer)) >= 0) { //Reads until there is no data left in the file
+                os.write(buffer,0,count);   //writes the read data to the response body
             }
             fs.close();
             os.close();

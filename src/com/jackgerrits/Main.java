@@ -5,7 +5,9 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) {
+        //creating the Sever object and then start it
         Server server = new Server();
+        server.start();
 
         System.out.println("\nPress enter to end...\n");
 
