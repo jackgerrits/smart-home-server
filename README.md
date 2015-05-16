@@ -1,6 +1,7 @@
 # smart-home-server
 
 Web/application server for interfacing with client and connected Phidgets.
+
 Demo: [https://youtu.be/12_MngSEBbA](https://youtu.be/12_MngSEBbA)
 
 ###Dependencies
