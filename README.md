@@ -41,10 +41,12 @@ Below requests require use of POST method, with a JSON object for authentication
 
 ###Program flow
 Server creates SensorController which creates Phidgets and loads events from events.json
-    * Phidgets attach listeners for sensor change events (Phidget API)
-    * These change events are sent to the SensorController and the EventTester tests each change event according to the rule definitions
-    * Detected events are pushed onto a queue, and also checked if they compose an AND event
+* Phidgets attach listeners for sensor change events (Phidget API)
+* These change events are sent to the SensorController and the EventTester tests each change event according to the rule definitions
+* Detected events are pushed onto a queue, and also checked if they compose an AND event
 
 When a client requests */data/feed*, responds with Event at the front of the queue, or holds the request until an event happens
+
 When a client requests */data/sensors*, responds with a list of all the sensors as defined in options.prop
+
 When a client requests */data/sensors/[sensorName]*, responds with the current value of that sensor if it exists, or 404 if it doesn't
