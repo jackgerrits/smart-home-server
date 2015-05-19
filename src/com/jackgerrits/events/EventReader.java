@@ -124,6 +124,14 @@ public class EventReader {
                     paramsList.put("description-absent", (String)current.get("description-absent"));
                     paramsList.put("motion-sensor", (String)current.get("motion-sensor"));
 
+                    int flucThresh = -1;
+                    if(current.containsKey("fluctuationThreshold")){
+                        flucThresh = ((Long)current.get("fluctuationThreshold")).intValue();
+                    } else {
+                        System.out.println("JSON ERROR: Missing field in entityDetection: \"fluctuationThreshold\"");
+                        System.exit(1);
+                    }
+
                     if(paramsList.values().contains(null)){
                         System.out.println("JSON ERROR: Missing field in entityDetection");
                         System.exit(1);
@@ -137,7 +145,7 @@ public class EventReader {
                         System.exit(1);
                     }
 
-                    container.add(new EntityDetectionEventRule(paramsList, hidden, timeout));
+                    container.add(new EntityDetectionEventRule(paramsList, flucThresh, hidden, timeout));
                     break;
                 default:
                     System.out.println("JSON ERROR: Unknown type. Known types are: [change, equal, threshold, and, entityDetection]");

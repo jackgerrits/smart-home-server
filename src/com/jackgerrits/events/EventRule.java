@@ -7,7 +7,8 @@ import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
 
 /**
- * Created by jackgerrits on 23/03/15.
+ * Abstract class for defining event rules
+ * @author jackgerrits
  */
 public abstract class EventRule {
     String name;

@@ -44,7 +44,7 @@
       "description_lt": "The light has been turned off.",
       "description_gt": "The light has been turned on.",
       "sensor": "light",
-      "value": 15
+      "value": 10
     },
     {
       "type": "threshold",
@@ -75,7 +75,9 @@
       "description-occupied": "The room is occupied.",
       "description-absent": "The room is empty.",
       "door-sensor":"doorSwitch",
+      "ir-sensor": "irdistance",
       "motion-sensor": "motion",
+      "fluctuationThreshold": 3000,
       "timeout": 4000
     },
     {
