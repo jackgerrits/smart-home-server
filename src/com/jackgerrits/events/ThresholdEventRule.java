@@ -80,12 +80,21 @@ public class ThresholdEventRule extends EventRule {
         }
     }
 
+    /**
+     * Tests whether an event name corresponds to this event rule
+     * @param eventName name of event to test
+     * @return true if it corresponding
+     */
     @Override
     public boolean isCorrespondingTo(String eventName) {
         return eventName.equals(name) || eventName.equals(name_lt)  || eventName.equals(name_gt)  ;
     }
 
-
+    /**
+     * Tests whether an Event corresponds to this event rule
+     * @param event Event to test
+     * @return true if it corresponding
+     */
     @Override
     public boolean isCorrespondingTo(Event event){
         String n = event.getName();

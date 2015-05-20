@@ -2,7 +2,7 @@
 
 Web/application server for interfacing with client and connected Phidgets.
 
-Demo: [https://youtu.be/12_MngSEBbA](https://youtu.be/12_MngSEBbA)
+Demo: [youtu.be/v49lkMFm10s](youtu.be/v49lkMFm10s)
 
 ###Dependencies
 * [Phidget Java library](http://www.phidgets.com/docs/Language_-_Java)

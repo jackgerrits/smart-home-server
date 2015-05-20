@@ -209,7 +209,7 @@ public class EntityDetectionEventRule extends EventRule{
                     System.out.println("[Entity Detection] Timer finished: {max: " + maxValue + ", min: " + minValue + ", fluc:  " + totalFluctuation+"}");
                     if(totalFluctuation>fluctuationThresh && !isOccupied ){
                         isOccupied = true;
-                        //adds the corresponding 
+                        //adds the corresponding
                         sensorController.addEvent(new Event(paramList.get("name-enter"), paramList.get("description-enter"), isHidden));
                     } else if(totalFluctuation<fluctuationThresh && isOccupied){
                         isOccupied = false;
@@ -220,6 +220,9 @@ public class EntityDetectionEventRule extends EventRule{
             }, 5000);
         }
 
+        /**
+         * Resets the state of the MotionObserver back to defaults
+         */
         private void resetValues(){
             maxValue = 500;
             minValue = 500;
