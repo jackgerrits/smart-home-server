@@ -5,6 +5,7 @@ import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
 
 /**
+ * EventRule for defining an AND relationship with other events
  * @author jackgerrits
  */
 public class AndEventRule extends EventRule {

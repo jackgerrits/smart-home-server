@@ -1,7 +1,8 @@
 package com.jackgerrits;
 
 /**
- * Created by Jack on 21/03/2015.
+ * Data structure for a sensor
+ * @author jackgerrits
  */
 public class Sensor {
     /**

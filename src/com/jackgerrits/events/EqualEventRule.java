@@ -6,6 +6,7 @@ import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
 
 /**
+ * EventRule for defining if a sensor value is equal to a set value
  * @author jackgerrits
  */
 public class EqualEventRule extends EventRule {
@@ -15,7 +16,7 @@ public class EqualEventRule extends EventRule {
     private int val;
 
     /**
-     * Constructs AndEventRule object for the given parameters
+     * Constructs EqualEventRule object for the given parameters
      * @param name Name of the event to generate and this event rule
      * @param description Description of what the EventRule represents
      * @param sensorName name of the sensor to detect changes from
@@ -30,6 +31,12 @@ public class EqualEventRule extends EventRule {
         this.val = val;
     }
 
+    /**
+     * Tests whether a given InputChangeEvent corresponds to this EventRules sensor
+     * @param ie InputChangeEvent from Phidget to test
+     * @param override overrides the firing timeout
+     * @return Event if the sensor matches, otherwise null
+     */
     @Override
     public Event testEvent(InputChangeEvent ie, boolean override) throws PhidgetException {
         Sensor eventSensor = sensorController.getSensor(ie.getIndex(), Sensor.sensorType.DIGITAL, ie.getSource());
@@ -37,6 +44,12 @@ public class EqualEventRule extends EventRule {
         return testForEvent(eventSensor, override);
     }
 
+    /**
+     * Tests whether a given SensorChangeEvent corresponds to this EventRules sensor
+     * @param se SensorChangeEvent from Phidget to test
+     * @param override overrides the firing timeout
+     * @return Event if the sensor matches, otherwise null
+     */
     @Override
     public Event testEvent(SensorChangeEvent se, boolean override) throws PhidgetException {
         Sensor eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG, se.getSource());
@@ -44,6 +57,10 @@ public class EqualEventRule extends EventRule {
         return testForEvent(eventSensor, override);
     }
 
+    /**
+     * Tests whether the EventRule is currently satisfied
+     * @return Event if it is currently satisfied, otherwise null
+     */
     public Event testEvent() throws PhidgetException {
         if(sensorController.getVal(sensorName) == val){
             return new Event(name, description, hideFromFeed);
@@ -72,5 +89,4 @@ public class EqualEventRule extends EventRule {
         }
         return null;
     }
-
 }

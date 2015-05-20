@@ -3,7 +3,6 @@ package com.jackgerrits;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 
 /**
  * Utility methods for hashing and comparing passwords

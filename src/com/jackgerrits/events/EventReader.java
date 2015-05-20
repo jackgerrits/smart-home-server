@@ -13,44 +13,96 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by Jack on 28/03/2015.
+ * Reads a json file defining the EventRules
+ * @author jackgerrits
  */
 public class EventReader {
     String filename;
     Options ops;
     RulesContainer container;
 
+    /**
+     * Constructs an EventReader for the given filename
+     * @param filename name of file to read to event definitions from
+     */
     public EventReader(String filename){
         this.filename = filename;
         ops = Options.get();
         container = new RulesContainer();
     }
 
+    /**
+     * Processes the json file specified on construction
+     * @return RulesContainer containing all event rules defined in the json
+     */
+    public RulesContainer getContainer(){
+        JSONParser parser = new JSONParser();
+        FileReader fr = null;
+
+        try {
+            fr = new FileReader(filename);
+            Object obj = parser.parse(fr);
+            JSONObject jsonObject =  (JSONObject) obj;
+            JSONArray events = (JSONArray)jsonObject.get("events");
+            //goes through each item in the events array in the json file
+            for(Object event: events){
+                JSONObject current = (JSONObject) event;
+                processCurrent(current);    //processes current json object and adds event rule into container
+            }
+        } catch (FileNotFoundException e) {
+            System.out.print("ERROR: "+ filename + " not found!");
+            System.exit(1);
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        if (fr != null) {
+            try {
+                fr.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return container;
+    }
+
+
+    /**
+     * Processes a json object for EventRules and adds them to the RulesContainer
+     * @param current json object to process
+     */
     void processCurrent(JSONObject current){
+        //type is a required field for EventRule
         if(!current.containsKey("type")){
             System.out.println("JSON ERROR: Every event must have a type defined. Types are: [change, equal, threshold, and, entityDetection]");
             System.exit(1);
         }
 
-
-        String type = (String) current.get("type");
         String name, description, sensor;
         Integer val;
         boolean hidden;
         int timeout;
 
+        //gets type as it is required and checked for existance above
+        String type = (String) current.get("type");
+
+        //gets hide-from-feed or sets as default false
         if(current.containsKey("hide-from-feed")){
             hidden = (boolean) current.get("hide-from-feed");
         } else {
             hidden = false;
         }
 
+        //gets timeout or sets as default from options
         if(current.containsKey("timeout")){
             timeout = ((Long)current.get("timeout")).intValue();
         } else {
             timeout = ops.getDefaultTimeout();
         }
 
+        //verifies that there are no repeated names of events
         name = (String) current.get("name");
         if(container.getEventRule(name)!=null){
             System.out.println("JSON ERROR: Repeated event name: " + name);
@@ -62,6 +114,7 @@ public class EventReader {
                 description = (String) current.get("description");
                 sensor = (String) current.get("sensor");
 
+                //checks if any of the required fields were missing, prints error message
                 if(name == null || description == null || sensor == null){
                     System.out.println("JSON ERROR: Missing field. Required fields for change: [type, name, description, sensor]");
                     System.exit(1);
@@ -74,7 +127,7 @@ public class EventReader {
                 sensor = (String) current.get("sensor");
                 val = ((Long) current.get("value")).intValue();
 
-
+                //checks if any of the required fields were missing, prints error message
                 if(name == null || description == null || sensor == null || val == -1){
                     System.out.println("JSON ERROR: Missing field. Required fields for equal: [type, name, description, sensor, value]");
                     System.exit(1);
@@ -91,11 +144,12 @@ public class EventReader {
                 sensor = (String) current.get("sensor");
                 val = ((Long) current.get("value")).intValue();
 
+                //checks if any of the required fields were missing, prints error message
                 if(name == null || name_lt == null || name_gt == null || description_lt == null || description_gt == null ||  val == -1){
                     System.out.println("JSON ERROR: Missing field. Required fields for threshold: [type, name, name_lt, name_gt, description_lt, description_gt, sensor, value]");
                     System.exit(1);
                 } else {
-                    container.add((new ThresholdEventRule(name, name_lt, name_gt, description_lt, description_gt, sensor, val, hidden, timeout)));
+                    container.add(new ThresholdEventRule(name, name_lt, name_gt, description_lt, description_gt, sensor, val, hidden, timeout));
                 }
                 break;
             case "and":
@@ -103,6 +157,7 @@ public class EventReader {
                 String event1 = (String) current.get("event1");
                 String event2 = (String) current.get("event2");
 
+                //checks if any of the required fields were missing, prints error message
                 if(name == null || description == null || event1 == null || event2 == null){
                     System.out.println("JSON ERROR: Missing field. Required fields for and: [type, name, description, event1, event2]");
                     System.exit(1);
@@ -116,6 +171,7 @@ public class EventReader {
                     System.exit(1);
                 }
 
+                //uses a HashMap since there are many values, too many for a constructor practically
                 HashMap<String,String> paramsList = new HashMap<>();
 
                 paramsList.put("name", (String)current.get("name"));
@@ -137,6 +193,7 @@ public class EventReader {
                     System.exit(1);
                 }
 
+                //tests if any of the fields were missing
                 if(paramsList.values().contains(null)){
                     System.out.println("JSON ERROR: Missing field in entityDetection");
                     System.exit(1);
@@ -158,72 +215,66 @@ public class EventReader {
         }
     }
 
-
-    public RulesContainer getContainer(){
-        JSONParser parser = new JSONParser();
-        FileReader fr = null;
-
-        try {
-            fr = new FileReader(filename);
-            Object obj = parser.parse(fr);
-            JSONObject jsonObject =  (JSONObject) obj;
-            JSONArray events = (JSONArray) jsonObject.get("events");
-            for(Object event: events){
-                JSONObject current = (JSONObject) event;
-                processCurrent(current);
-            }
-        } catch (FileNotFoundException e) {
-            System.out.print("ERROR: "+ filename + " not found!");
-            System.exit(1);
-        } catch (ParseException | IOException e) {
-            e.printStackTrace();
-        }
-
-        if (fr != null) {
-            try {
-                fr.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return container;
-    }
-
+    /**
+     * Helper datatype for passing EventRules
+     */
     public class RulesContainer {
         ArrayList<AndEventRule> andEventRules;
         ArrayList<EventRule> eventRules;
         EntityDetectionEventRule et = null;
 
-
+        /**
+         * Constructs new RulesContainer object, initialises state
+         */
         public RulesContainer(){
             andEventRules = new ArrayList<>();
             eventRules = new ArrayList<>();
         }
 
+        /**
+         * Gets the EntityDetectionRule
+         * @return returns the EntityDetectionRule if defined, otherwise null
+         */
         public EntityDetectionEventRule getEntityDetectionEventRule(){
             return et;
         }
 
-
+        /**
+         * Adds a new event rule into the container
+         * @param rule EventRule to add
+         */
         public void add(EventRule rule){
-            if(rule instanceof AndEventRule){
+            if(rule instanceof AndEventRule){ // adds AndEventRules to a different list
                 andEventRules.add((AndEventRule)rule);
-            } else if(rule instanceof EntityDetectionEventRule) {
+            } else if(rule instanceof EntityDetectionEventRule) { // sets the EntityDetectionEventRule of container
                 et = (EntityDetectionEventRule)rule;
                 eventRules.add(0,rule);
             } else {
-                eventRules.add(rule);
+                eventRules.add(rule); //adds a normal rule
             }
         }
 
+        /**
+         * Gets the AndEventRules
+         * @return ArrayList of AndEventRules
+         */
         public ArrayList<AndEventRule> getAndEventRules(){
             return andEventRules;
         }
 
+        /**
+         * Gets the EventRules
+         * @return ArrayList of EventRules
+         */
         public ArrayList<EventRule> getEventRules(){
             return eventRules;
         }
 
+        /**
+         * Gets an EventRule by name
+         * @param name name of rule to get
+         * @return EventRule if found, otherwise null
+         */
         public EventRule getEventRule(String name){
             for(EventRule rule : eventRules){
                 if(rule.isCorrespondingTo(name)){

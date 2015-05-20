@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 /**
- * Handles reading user definedoptions from the options.prop file
+ * Handles reading user defined options from the options.prop file
  * @author jackgerrits
  */
 public class Options {

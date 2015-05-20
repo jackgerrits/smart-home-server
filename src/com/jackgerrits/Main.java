@@ -2,6 +2,10 @@ package com.jackgerrits;
 
 import java.io.IOException;
 
+/**
+ * Main driver class
+ * @author jackgerrits
+ */
 public class Main {
 
     public static void main(String[] args) {

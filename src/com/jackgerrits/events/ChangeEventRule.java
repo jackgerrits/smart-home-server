@@ -6,6 +6,7 @@ import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
 
 /**
+ * EventRule for defining a change behaviour in a sensor
  * @author jackgerrits
  */
 public class ChangeEventRule extends EventRule {
@@ -14,7 +15,7 @@ public class ChangeEventRule extends EventRule {
     private String sensorName;
 
     /**
-     * Constructs AndEventRule object for the given parameters
+     * Constructs ChangeEventRule object for the given parameters
      * @param name Name of the event to generate and this event rule
      * @param description Description of what the EventRule represents
      * @param sensorName name of the sensor to detect changes from

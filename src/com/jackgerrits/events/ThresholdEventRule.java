@@ -6,7 +6,8 @@ import com.phidgets.event.InputChangeEvent;
 import com.phidgets.event.SensorChangeEvent;
 
 /**
- * Created by Jack on 28/03/2015.
+ * EventRule for defining behaviour above and below a threshold
+ * @author jackgerrits
  */
 public class ThresholdEventRule extends EventRule {
 
@@ -22,6 +23,18 @@ public class ThresholdEventRule extends EventRule {
         LT, GT
     }
 
+    /**
+     * Constructs ThresholdEventRule object for the given parameters
+     * @param name General name of this EventRule
+     * @param name_lt Name of event for when it is less than the value
+     * @param name_gt Name of the event for when it is greater than the value
+     * @param d_lt Description of the event for when it is less than the value
+     * @param d_gt Description of the event for when it is greater than the value
+     * @param sensorName name of the sensor to detect changes from
+     * @param val specified sensor value threshold for the event
+     * @param hideFromFeed true to hide event from feed pushed to client
+     * @param timeout timeout between event fires, -1 to use default from options
+     */
     public ThresholdEventRule(String name, String name_lt, String name_gt, String d_lt, String d_gt, String sensorName, int val, boolean hideFromFeed, int timeout){
         super(name, hideFromFeed, timeout);
         this.name_lt = name_lt;
@@ -33,7 +46,7 @@ public class ThresholdEventRule extends EventRule {
         this.currentState = getInitialState();
     }
 
-    state getInitialState(){
+    private state getInitialState(){
         try{
             if((sensorController.getVal(sensorName) > threshold)){
                 return state.GT;
@@ -45,23 +58,34 @@ public class ThresholdEventRule extends EventRule {
         return state.LT;
     }
 
-    //this rule does not make sense for a digital input, no point testing
-    public Event testEvent(InputChangeEvent se, boolean override) {
+    /**
+     * A threshold test doesn't make sense for digital inputs
+     * @param ie InputChangeEvent to test
+     * @param override overrides the firing timeout
+     * @return null
+     */
+    public Event testEvent(InputChangeEvent ie, boolean override) {
         return null;
     }
 
+    /**
+     * Tests whether a given SensorChangeEvent corresponds to this EventRules sensor
+     * @param se SensorChangeEvent from Phidget to test
+     * @param override overrides the firing timeout
+     * @return Corresponding Event if it crosses the threshold, otherwise null
+     */
     public Event testEvent(SensorChangeEvent se, boolean override) throws PhidgetException {
         Sensor eventSensor;
         eventSensor = sensorController.getSensor(se.getIndex(), Sensor.sensorType.ANALOG, se.getSource());
 
         if(eventSensor != null && eventSensor.getName().equals(sensorName)){
             int currentValue = sensorController.getVal(eventSensor);
-            if((currentValue > threshold) && (currentState != state.GT)){
+            if((currentValue > threshold) && (currentState != state.GT)){   //changes from less than to greater than
                if(override || canFire()){
                     currentState = state.GT;
                     return new Event(name_gt,description_gt, hideFromFeed);
                 }
-            } else if ((currentValue < threshold) && (currentState != state.LT)){
+            } else if ((currentValue < threshold) && (currentState != state.LT)){   //changes from greater than to less than
                 if(override || canFire()){
                     currentState = state.LT;
                     return new Event(name_lt,description_lt, hideFromFeed);
@@ -71,6 +95,10 @@ public class ThresholdEventRule extends EventRule {
         return null;
     }
 
+    /**
+     * Test the current state of the ThresholdEventRule
+     * @return Event corresponding to either less than or greater than
+     */
     @Override
     public Event testEvent() throws PhidgetException {
         if((sensorController.getVal(sensorName) > threshold)){

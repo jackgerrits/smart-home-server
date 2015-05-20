@@ -21,10 +21,8 @@ import java.security.cert.CertificateException;
 import java.util.concurrent.Executors;
 
 /**
- * Created by Jack on 21/03/2015 <br>
  * Server class is essentially the overall driver, it is a singleton class. <br>
  * It's primary role is running the web server as well as creating and communicating with the <code>SensorController</code>
- *
  * @author Jack Gerrits
  */
 public class Server {
@@ -50,7 +48,7 @@ public class Server {
     /**
      * Constructs server instance <br>
      * Configures SSL for server and sets up routes for '/data/feed', '/data/sensors' and '/'<br>
-     * The finally starts web server.
+     * Then finally starts web server.
      */
     public Server(){
         self = this;

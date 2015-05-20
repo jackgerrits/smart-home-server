@@ -11,11 +11,10 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 /**
- * @author Jack Gerrits
- * Created by Jack on 21/03/2015 <br>
  * Controller for interfacing with collection of connected Phidgets and for handling sensor change events <br>
  * Holds event queue for event feed <br>
  * It is a singleton class
+ * @author Jack Gerrits
  */
 public class SensorController {
     private ArrayList<Phidget> phidgets;

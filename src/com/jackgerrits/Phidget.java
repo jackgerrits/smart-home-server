@@ -10,8 +10,8 @@ import com.phidgets.event.SensorChangeListener;
 import java.util.ArrayList;
 
 /**
- * @author Jack Gerrits
  * Object for each physical Phidget connected to the system, contains list of connected sensors and InterfaceKitPhidget for retrieving information.
+ * @author Jack Gerrits
  */
 public class Phidget {
     private ArrayList<Sensor> sensors;

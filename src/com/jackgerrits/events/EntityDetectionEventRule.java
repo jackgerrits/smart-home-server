@@ -132,7 +132,7 @@ public class EntityDetectionEventRule extends EventRule{
     }
 
     /**
-     * Listens for motion in room, if the room is deemed from absent->occupied or occupied->absent, adds the respective Event into the queue
+     * Listens for motion in room, if the room is deemed from absent to occupied or occupied to absent, adds the respective Event into the queue
      */
     public class MotionObserver {
         Phidget motionPhidget;

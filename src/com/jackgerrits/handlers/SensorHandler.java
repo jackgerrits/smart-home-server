@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Handler for sensor route, serves either all connected sensors or specific sensor values depending on path
+ * Handler for sensor route 'data/sensors/[sensorName]', serves either all connected sensors or specific sensor values depending on path
  * @author Jack Gerrits
  */
 public class SensorHandler implements HttpHandler {
