@@ -143,24 +143,25 @@ public class Server {
             out.append(line);
         }
 
-        String username = "";
-        String password = "";
+        String reqUsername = "";
+        String sysUsername = Options.get().getUsername();
+        String reqPassword = "";
 
         //parses body into JSON object
         JSONObject body = (JSONObject)(JSONValue.parse(out.toString()));
 
         //retrieves username from post body if it exists
         if(body.containsKey("username")){
-           username = (String)body.get("username");
+           reqUsername = (String)body.get("username");
         }
 
         //receives password from post body if it exists
         if(body.containsKey("password")){
-            password = (String)body.get("password");
+            reqPassword = (String)body.get("password");
         }
 
         //if either password or username field was omitted in JSON, it will not equal credentials on server
-        if(PasswordHash.validatePassword(password) && username.equals(username)){
+        if(PasswordHash.validatePassword(reqPassword) && sysUsername.equals(reqUsername)){
             return true;
         }
 
