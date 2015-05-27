@@ -65,6 +65,12 @@ public class SensorController {
         return null;
     }
 
+    
+    public ArrayList<Phidget> getPhidgets(){
+        ArrayList<Phidget> copied = new ArrayList<>(phidgets);  //copies new arraylist so
+        return copied;
+    }
+
     /**
      * Evaluate sensor change event, adds deduced events to event queue, for analog sensor changes.
      * @param se SensorChangeEvent to evaluate
