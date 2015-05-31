@@ -57,6 +57,10 @@ public class SensorController {
      */
     public Phidget getPhidget(String sensorName){
         Sensor sensor = getSensor(sensorName);
+        if(sensor==null){
+            return null;
+        }
+
         for(Phidget p : phidgets){
             if(p.getConnectedSensors().contains(sensor.getName())){
                 return  p;
@@ -65,7 +69,7 @@ public class SensorController {
         return null;
     }
 
-    
+
     public ArrayList<Phidget> getPhidgets(){
         ArrayList<Phidget> copied = new ArrayList<>(phidgets);  //copies new arraylist so
         return copied;
