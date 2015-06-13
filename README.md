@@ -9,15 +9,16 @@ Demo: [youtu.be/v49lkMFm10s](https://youtu.be/v49lkMFm10s)
 * [JSON.simple Java Library](https://code.google.com/p/json-simple/)
 
 ###Installation
-1. Compile with dependencies in classpath
+1. Install [drivers](http://www.phidgets.com/docs/Operating_System_Support)
 2. Generate keystore for SSL using
-```
-keytool -genkey -alias _alias_ -keyalg RSA -keystore _keystore.jks_ -keysize 2048
-```
+	```
+	keytool -genkey -alias _alias_ -keyalg RSA -keystore _keystore.jks_ -keysize 2048
+	```
 3. Put client in www directory at root of repository
 4. Modify __options.prop__ with correct information
 5. Modify __events.json__ with custom rule definitions
-5. Run
+6. Compile with dependencies in classpath
+7. Run
 
 options.prop, events.json and Main.java provide usage examples.
 
