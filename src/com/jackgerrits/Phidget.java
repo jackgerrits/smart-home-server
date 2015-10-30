@@ -75,6 +75,7 @@ public class Phidget {
         this.port = port;
         this.sensors = sensors;
 
+        // Create new interface
         ik = new InterfaceKitPhidget();
         ik.open(serial, ip, port);
         System.out.println("Attempting to connect to Phidget... [ NETWORK: "+ ip + ", "+ port + ", "+serial+" ]");
