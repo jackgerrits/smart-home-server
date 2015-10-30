@@ -50,4 +50,4 @@ When a client requests */data/feed*, responds with Event at the front of the que
 
 When a client requests */data/sensors*, responds with a list of all the sensors as defined in options.prop
 
-When a client requests */data/sensors/[sensorName]*, responds with the current value of that sensor if it exists, or 404 if it doesn't
+When a client requests */data/sensors/[sensorName]*, responds with the current value of that sensor if it exists, or 404 if it dooes not
