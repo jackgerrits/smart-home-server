@@ -15,6 +15,7 @@ public class Main {
 
         System.out.println("\nPress enter to end...\n");
 
+        // Read in user input
         try {
             System.in.read();
         } catch (IOException e) {
