@@ -1,6 +1,6 @@
 # smart-home-server
 
-Web/application server for interfacing with client and connected Phidgets.
+Web - application server for interfacing with client and connected Phidgets.
 
 Demo: [youtu.be/v49lkMFm10s](https://youtu.be/v49lkMFm10s)
 
