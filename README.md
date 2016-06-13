@@ -32,7 +32,7 @@ Below requests require use of POST method, with a JSON object for authentication
 {
     //These values are dependant on server configuration
     "username":"<username here>",
-    "username":"<password here>"
+    "password":"<password here>"
 }
 ```
 
